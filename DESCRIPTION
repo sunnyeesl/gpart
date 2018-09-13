@@ -1,0 +1,32 @@
+Package: gpart
+Title: Human genome partitioning of dense sequencing data by identifying haplotype blocks
+Version: 0.99.0
+Authors@R: c(person(given = "Sun Ah", family = "Kim", role = c("aut", "cre", "cph"), email = "sunnyeesl@gmail.com"),
+    person(given = "Yun Joo", family = "Yoo", role = c("aut", "cph")))
+Depends: R (>= 3.5.0), 
+    grid, 
+    Homo.sapiens,
+    TxDb.Hsapiens.UCSC.hg38.knownGene,
+Description: we provide a new SNP sequence partitioning method which partitions the whole SNP sequence based on not only LD block structures but also gene location information. The LD block construction for GPART is performed using Big-LD algorithm, with additional improvement from previous version reported in Kim et al.(2017). We also add a visualization tool to show the LD heatmap with the information of LD block boundaries and gene locations in the package.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+biocViews: Software, StatisticalMethod, Clustering
+Imports: 
+    igraph,
+    biomaRt,
+    Rcpp,
+    data.table,
+    OrganismDbi,
+    AnnotationDbi,
+    grDevices,
+    stats,
+    utils
+LinkingTo: 
+    Rcpp
+RoxygenNote: 6.1.0
+Suggests: 
+    knitr,
+    rmarkdown, 
+    BiocStyle
+VignetteBuilder: knitr
