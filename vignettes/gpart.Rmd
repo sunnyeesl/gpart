@@ -34,11 +34,9 @@ In this package **gpart**, we provide a new SNP sequence partitioning method whi
 
 ## Installation
 
+Download and install the most current of "gpart".
+
 ```{r install_igraph, eval = FALSE}
-# installation
-source("https://bioconductor.org/biocLite.R")
-biocLite("gpart")
-# attach the package
 library(gpart)
 ```
 ```{r library, include=FALSE}
