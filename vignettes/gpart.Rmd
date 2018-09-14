@@ -249,14 +249,13 @@ When you use "ensembl" data, you can set the version of the data by using the op
 By default, we use "hgnc symbol" for the gene name. You can change it by the option `geneid` depending on the gene DB you choose.
 If there are more than 2 gene information with the same gene name, we union the regions with the same name.
 
-```{r GPARTeg4, results='hide'}
+```{r GPARTeg4, eval=FALSE}
 # use `geneDB` option instead of `geneinfo` or `geneinfofile`
 # default geneDB is "ensembl" and  default assembly is "GRCh38"
 Gres6 = GPART(geno = geno, SNPinfo = SNPinfo, geneDB = "ensembl", 
               assembly = "GRCh37")
 Gres7 = GPART(geno = geno, SNPinfo = SNPinfo, geneDB = "ucsc", 
               assembly = "GRCh37" )
-
 ```
 
 
@@ -359,7 +358,7 @@ LDblockHeatmap(geno = geno[,1:500], SNPinfo = SNPinfo[1:500,],
 
 As with `GPART`, you can use the options `geneinfofile`, `geneDB`, `assembly`, and `ensbversion`.
 
-```{r LDheat5, results='hide'}
+```{r LDheat5, eval=FALSE}
 # Show gene region information obtained from "ensembl" DB in assembly GRCh38.
 LDblockHeatmap(geno = geno[,1:1500], SNPinfo = SNPinfo[1:1500,], 
                geneDB = "ensembl", assembly = "GRCh37",
