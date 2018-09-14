@@ -11,7 +11,7 @@ Description: we provide a new SNP sequence partitioning method which partitions 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-biocViews: Software, StatisticalMethod, Clustering
+biocViews: Software, Clustering, LinkageDisequilibrium, SNP
 Imports: 
     igraph,
     biomaRt,
