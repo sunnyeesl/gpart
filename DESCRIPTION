@@ -1,6 +1,6 @@
 Package: gpart
 Title: Human genome partitioning of dense sequencing data by identifying haplotype blocks
-Version: 0.99.9
+Version: 0.99.10
 Authors@R: c(person(given = "Sun Ah", family = "Kim", role = c("aut", "cre", "cph"), email = "sunnyeesl@gmail.com"),
     person(given = "Yun Joo", family = "Yoo", role = c("aut", "cph")))
 Depends: R (>= 3.5.0), 
@@ -11,7 +11,7 @@ Description: we provide a new SNP sequence partitioning method which partitions 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-biocViews: Software, Clustering, LinkageDisequilibrium, SNP
+biocViews: Software, Clustering
 Imports: 
     igraph,
     biomaRt,
