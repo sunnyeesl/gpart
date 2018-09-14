@@ -36,10 +36,7 @@ In this package **gpart**, we provide a new SNP sequence partitioning method whi
 
 Download and install the most current of "gpart".
 
-```{r install_igraph, eval = FALSE}
-library(gpart)
-```
-```{r library, include=FALSE}
+```{r library}
 library(gpart)
 ```
 
@@ -68,16 +65,9 @@ head(SNPinfo)
 CLQD is an algorithm for clustering the SNPs into LD bins which are high-correlated SNP groups.
 
 #### Examples
-```{r CLQDeg1, eval=FALSE}
+```{r CLQDeg1}
 clq1 = CLQD(geno[, 1:300], SNPinfo[1:300,])
-clq2 = CLQD(geno[, 1:300], SNPinfo[1:300,], LD = "Dprime")
-clq3 = CLQD(geno[, 1:300], SNPinfo[1:300,], CLQcut = 0.7, hrstType = "fast", 
-            CLQmode = "maximal")
 
-```
-
-```{r CLQDeg1_inF, include=FALSE}
-clq1 = CLQD(geno[, 1:300], SNPinfo[1:300,])
 ```
 
 #### Values
@@ -122,21 +112,24 @@ Big-LD have several distinctive features. Since the Big-LD algorithm designed ba
 
 #### Examples
 
-```{r BigLDeg1, results='hide'}
-# When you have to input R object, use the parameter `geno` and `SNPinfo`
+```{r BigLDeg1}
+# Use the options `geno` and `SNPinfo` to input additive genotype data and SNP information data respectively.
 # use r2 measure (default)
-res1 = BigLD(geno = geno[,1:1500], SNPinfo = SNPinfo[1:1500,]) 
-#use D' measure
-res1_dp = BigLD(geno = geno[,1:500], SNPinfo = SNPinfo[1:500,]
-                ,LD = "Dprime") 
+res1 = BigLD(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,]) 
 ```
-```{r BigLDshow}
-head(res1)
-head(res1_dp)
+
+```{r BigLDeg1-1, eval=FALSE}
+#use D' measure
+res1_dp = BigLD(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,]
+                ,LD = "Dprime") 
 ```
 
 #### Values
 BigLD returns a data frames of Big-LD results, and it contains 7 information of each block (chromosome name, indices of the first SNP and last SNP, rsID of the first SNP and last SNP, bp of the first SNP and last SNP)
+
+```{r BigLDeg1show}
+head(res1)
+```
 
 #### Details
 
@@ -188,8 +181,9 @@ In other ways, you can make that the GPART function automatically run the `BigLD
 ```{r GPARTeg0}
 # gene based GPART using the pre-calculated BigLD result 'res1'
 # The input data of GPART must be the same as the input data used to obtain 'res1'
+# note that the `res1` is obtained by using the first 1000 SNPs in geno.
 # default minsize = 4, maxsize = 50
-Gres0 = GPART(geno = geno[,1:1500], SNPinfo = SNPinfo[1:1500,], geneinfo = geneinfo,
+Gres0 = GPART(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,], geneinfo = geneinfo,
               BigLDresult = res1, minsize = 4, maxsize = 50)
 ```
 
@@ -257,9 +251,9 @@ If there are more than 2 gene information with the same gene name, we union the 
 ```{r GPARTeg4, eval=FALSE}
 # use `geneDB` option instead of `geneinfo` or `geneinfofile`
 # default geneDB is "ensembl" and  default assembly is "GRCh38"
-Gres6 = GPART(geno = geno[,1:1500], SNPinfo = SNPinfo[1:1500,], 
+Gres6 = GPART(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,],
               BigLDresult = res1, geneDB = "ensembl", assembly = "GRCh37")
-Gres7 = GPART(geno = geno[,1:1500], SNPinfo = SNPinfo[1:1500,], 
+Gres7 = GPART(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,], 
               BigLDresult = res1, geneDB = "ucsc", assembly = "GRCh37" )
 ```
 
@@ -279,14 +273,27 @@ If you want to show the Big-LD (or GPART) results, you need to input the Big-LD 
 
 Set the option `filename` and `res` to specify the file name and resolution of a plot respectively.
 
-```{r LDheat1-0}
-# show pre-calculate the Big-LD results with a heatmap.
-LDblockHeatmap(geno = geno[,1:1500], SNPinfo = SNPinfo[1:1500,], 
-               geneinfo = geneinfo, blockresult = res1, 
-               filename = "heatmap1", res = 200)
+```{r LDheat1-0, eval=FALSE}
+# First LDblockHeatmap calculate the LD block results using BigLD(), and then draw the LD heatmap, block boundaries and physical locations, and gene information
+LDblockHeatmap(geno = geno, SNPinfo = SNPinfo,geneinfo = geneinfo, 
+                filename = "heatmap_all", res = 150)
 ```
 
+* heatmap_all.png
+
+In `geno`, there are 3340 SNPs with MAF>0.05. The "heatmap_all.png" shows the LDheatmap and BigLD results of the 3340SNPs. 
+
+```{r, out.width = "1200px", echo = FALSE}
+knitr::include_graphics("heatmap_all.png")
+```
+
+
 ```{r LDheat1-1, eval=FALSE}
+# You can use the already obtained BigLD result using an option 'blockresult'.
+# note that the `res1` is obtained by using the first 1000 SNPs in geno.
+LDblockHeatmap(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,], 
+               geneinfo = geneinfo, blockresult = res1, 
+               filename = "heatmap1", res = 200)
 # For the obtained result 'res1', you can plot the only part of the result.
 LDblockHeatmap(geno = geno[,300:800], SNPinfo = SNPinfo[300:800,], 
                geneinfo = geneinfo, blockresult = res1, 
@@ -295,20 +302,9 @@ LDblockHeatmap(geno = geno[,300:800], SNPinfo = SNPinfo[300:800,],
 # the function will calculate the BigLD result first and then draw the figure using the result.
 LDblockHeatmap(geno = geno, SNPinfo = SNPinfo, 
                geneinfo = geneinfo, filename = "heatmap2")
-```
-
-The output can be saved in png file (`type = "png"`, default) or tiff file (`type = "tif"`).
-
-```{r LDheat1-2, eval=FALSE}
 # you can save the output in tiff file
-LDblockHeatmap(geno = geno[,1:3000], SNPinfo = SNPinfo[1:3000,], 
+LDblockHeatmap(geno = geno, SNPinfo = SNPinfo, 
                geneinfo = geneinfo, filename = "heatmap3", type = "tif")
-```
-
-* heatmap1.png
-
-```{r, out.width = "1000px", echo = FALSE}
-knitr::include_graphics("heatmap1.png")
 ```
 
 
@@ -357,11 +353,11 @@ To draw the figures using the GPART results, you need to set the option `blockty
 
 ```{r LDheat4, eval=FALSE}
 # using the obatined GPART results, draw figure.
-LDblockHeatmap(geno = geno[,1:1500], SNPinfo = SNPinfo[1:1500,], 
+LDblockHeatmap(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,], 
                geneinfo = geneinfo, blockresult = Gres0, 
                blocktype = "gpart", filename = "heatmap_gpart")
 # or if you set the blocktype only, the function will execute the proper block construction algorithm.
-LDblockHeatmap(geno = geno[,1:500], SNPinfo = SNPinfo[1:500,], 
+LDblockHeatmap(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,], 
                geneinfo = geneinfo, blocktype = "gpart", 
                filename = "heatmap_gpart2")
 ```
@@ -370,7 +366,7 @@ As with `GPART`, you can use the options `geneinfofile`, `geneDB`, `assembly`, a
 
 ```{r LDheat5, eval=FALSE}
 # Show gene region information obtained from "ensembl" DB in assembly GRCh38.
-LDblockHeatmap(geno = geno[,1:1500], SNPinfo = SNPinfo[1:1500,], 
+LDblockHeatmap(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,], 
                geneDB = "ensembl", assembly = "GRCh37",
                filename = "heatmap_enb")
 ```
@@ -379,8 +375,8 @@ You also can choose to not show the gene region information by setting as `genes
 
 ```{r LDheat5-1, eval=FALSE}
 # Do not show the gene region information.
-LDblockHeatmap(geno = geno[,1:500], SNPinfo = SNPinfo[1:500,], geneshow = FALSE,
-               filename = "heatmap_wogene")
+LDblockHeatmap(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,], 
+               geneshow = FALSE, filename = "heatmap_wogene")
 ```
 
 
@@ -405,6 +401,5 @@ The function then ignores the entered block results or not pre-calculates the bl
 ```{r LDheat7, eval=FALSE}
 # using "onlyHeatmap = TRUE"
 LDblockHeatmap(geno = geno, SNPinfo = SNPinfo, geneinfo = geneinfo,
-               startbp = 16000000, endbp = 16200000,
-               onlyHeatmap = TRUE, filename = "heatmap_no_bound")
+               onlyHeatmap = TRUE, filename = "heatmap_no_bound", res = 150)
 ```
