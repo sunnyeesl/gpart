@@ -1320,9 +1320,9 @@ combineOverlapSamegene = function(genelist){
 #'
 #' data(geno)
 #' data(SNPinfo)
-#' CLQD(geno=geno[,1:1000],SNPinfo=SNPinfo[1000,],CLQcut = 0.5, clstgap= 40000, CLQmode = 'maximal')
-#' CLQD(geno=geno[,1:1000],SNPinfo=SNPinfo[1000,],CLQcut = 0.5, clstgap= 40000,
-#' CLQmode = 'density')
+#' CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[100,])
+#' CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[100,], CLQmode = 'maximal')
+#' CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[100,], LD='Dprime')
 #'
 #' @author Sun-Ah Kim <sunny03@snu.ac.kr>, Yun Joo Yoo <yyoo@snu.ac.kr>
 #' @importFrom stats cor median quantile
@@ -1578,7 +1578,7 @@ CLQD <- function(geno, SNPinfo, CLQcut=0.5, clstgap=40000, hrstType=c("near-nonh
 #'
 #' data(geno)
 #' data(SNPinfo)
-#' BigLD(geno, SNPinfo)
+#' BigLD(geno[,1:200], SNPinfo[1:200,])
 #'
 #' \dontrun{
 #' BigLD(geno, SNPinfo, LD = "Dprime")
@@ -1807,7 +1807,7 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
 #' data(geno)
 #' data(SNPinfo)
 #' data(geneinfo)
-#' GPART(geno=geno, SNPinfo=SNPinfo, geneinfo=geneinfo)
+#' GPART(geno=geno[,1:200], SNPinfo=SNPinfo[1:200,], geneinfo=geneinfo)
 #'
 #' @importFrom stats cor median quantile
 #' @importFrom utils tail
@@ -2166,7 +2166,7 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
 #'
 #' @examples
 #'
-#' LDblockHeatmap(geno=geno, SNPinfo=SNPinfo, geneinfo=geneinfo,
+#' LDblockHeatmap(geno=geno[,1:200], SNPinfo=SNPinfo[1:200,], geneinfo=geneinfo,
 #' filename="chr21Heatmap")
 #'
 #' @importFrom grDevices adjustcolor colorRampPalette dev.off heat.colors png tiff

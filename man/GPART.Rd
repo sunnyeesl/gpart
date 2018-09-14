@@ -82,7 +82,7 @@ The algorithm partition the whole sequence into sub sequences of which size do n
 data(geno)
 data(SNPinfo)
 data(geneinfo)
-GPART(geno=geno, SNPinfo=SNPinfo, geneinfo=geneinfo)
+GPART(geno=geno[,1:200], SNPinfo=SNPinfo[1:200,], geneinfo=geneinfo)
 
 }
 \seealso{

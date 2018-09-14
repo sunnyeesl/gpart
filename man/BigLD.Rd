@@ -70,7 +70,7 @@ Each row of data frame shows the starting SNP and end SNP of each estimated LD b
 
 data(geno)
 data(SNPinfo)
-BigLD(geno, SNPinfo)
+BigLD(geno[,1:200], SNPinfo[1:200,])
 
 \dontrun{
 BigLD(geno, SNPinfo, LD = "Dprime")

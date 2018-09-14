@@ -104,7 +104,7 @@ type=c("png", "tif"), filename="heatmap", res=300, onlyHeatmap=FALSE)
 }
 \examples{
 
-LDblockHeatmap(geno=geno, SNPinfo=SNPinfo, geneinfo=geneinfo,
+LDblockHeatmap(geno=geno[,1:200], SNPinfo=SNPinfo[1:200,], geneinfo=geneinfo,
 filename="chr21Heatmap")
 
 }

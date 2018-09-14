@@ -45,9 +45,9 @@ A vector of cluster numbers of all  SNPs (\code{NA} represents singleton cluster
 
 data(geno)
 data(SNPinfo)
-CLQD(geno=geno[,1:1000],SNPinfo=SNPinfo[1000,],CLQcut = 0.5, clstgap= 40000, CLQmode = 'maximal')
-CLQD(geno=geno[,1:1000],SNPinfo=SNPinfo[1000,],CLQcut = 0.5, clstgap= 40000,
-CLQmode = 'density')
+CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[100,])
+CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[100,], CLQmode = 'maximal')
+CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[100,], LD='Dprime')
 
 }
 \seealso{
