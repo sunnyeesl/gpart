@@ -273,7 +273,7 @@ LDblockHeatmap function visualizes the BigLD (or GPART) results. The function ca
 If you want to show the Big-LD (or GPART) results, you need to input the Big-LD (or GPART) results. Otherwise the function first executes the Big-LD (or GPART) algorithm and then draw the figures with the obtained results as `blocktype` you specify.
 
 
-```{r LDheat1-1}
+```{r LDheat1-1, eval=FALSE}
 # show pre-calculate the Big-LD results with a heatmap.
 LDblockHeatmap(geno = geno[,1:1500], SNPinfo = SNPinfo[1:1500,], 
                geneinfo = geneinfo, blockresult = res1, filename = "heatmap1")
@@ -285,7 +285,7 @@ LDblockHeatmap(geno = geno[,1:1500], SNPinfo = SNPinfo[1:1500,],
 
 The output can be saved in png file (`type = "png"`, default) or tiff file (`type = "tif"`).
 
-```{r LDheat1-2, results='hide'}
+```{r LDheat1-2, eval=FALSE}
 # you can save the output in tiff file
 LDblockHeatmap(geno = geno[,1:3000], SNPinfo = SNPinfo[1:3000,], 
                geneinfo = geneinfo, filename = "heatmap3", type = "tif")
@@ -307,19 +307,13 @@ To draw heatmap, there are three kind of LD measures
 Set `LD = "Dprime"` if you want to draw heatmap using D' measure.
 Set `LD = "Dp-str"` if you want to show only strong LD relations.
 
-```{r LDheat2, results='hide'}
+```{r LDheat2, eval=FALSE}
 # the function first execute Big_LD to obtain LDblock results, and then run GPART algorithm.
 LDblockHeatmap(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,], 
                geneinfo = geneinfo, LD = "Dprime", filename = "heatmap_Dp")
 # or you can use the Big-LD results already obtained.
 LDblockHeatmap(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,], 
                geneinfo = geneinfo, LD = "Dp-str", filename = "heatmap_Dp-str")
-```
-
-* heatmap_Dp.png
-
-```{r, out.width = "1000px", echo = FALSE}
-knitr::include_graphics("heatmap_Dp.png")
 ```
 
 * heatmap_Dp-str.png
@@ -331,7 +325,7 @@ knitr::include_graphics("heatmap_Dp-str.png")
 You can speicify the region by using options `chrN`, `startbp` and `endbp`.
 If the data includes more than two chromosome, you need to specify the chromosome name to draw by using `chrN`
 
-```{r LDheat3, results='hide'}
+```{r LDheat3, eval=FALSE}
 # the function first execute Big_LD to obtain LDblock results, and then run GPART algorithm.
 LDblockHeatmap(geno = geno, SNPinfo = SNPinfo, geneinfo = geneinfo,
                chrN = 21, startbp = 16000000, endbp = 16200000, 
@@ -345,7 +339,7 @@ when you set as `LD = "Dprime"` or `LD = "Dp-str"`, the `Big_LD` execute the alg
 
 To draw the figures using the GPART results, you need to set the option `blocktype = "gpart"`. If you do not input GPART results via `blockresult`, `GPART` first will be executed and gene-based algorithm will be applied.
 
-```{r LDheat4, results='hide'}
+```{r LDheat4, eval=FALSE}
 # using the obatined GPART results, draw figure.
 LDblockHeatmap(geno = geno[,1:500], SNPinfo = SNPinfo[1:500,], 
                geneinfo = geneinfo, blockresult = Gres0, 
@@ -367,7 +361,7 @@ LDblockHeatmap(geno = geno[,1:1500], SNPinfo = SNPinfo[1:1500,],
 
 You also can choose to not show the gene region information by setting as `geneshow = FALSE`
 
-```{r LDheat5-1, results='hide'}
+```{r LDheat5-1, eval=FALSE}
 # Do not show the gene region information.
 LDblockHeatmap(geno = geno[,1:500], SNPinfo = SNPinfo[1:500,], geneshow = FALSE,
                filename = "heatmap_wogene")
@@ -379,7 +373,7 @@ To show LD bins obtained by CLQ algorithm (when the total number of SNPs <=200),
 # using CLQshow = TRUE options to show LD bin results.
 LDblockHeatmap(geno = geno, SNPinfo = SNPinfo, geneinfo = geneinfo, 
                CLQshow = TRUE, startbp = 16300000, endbp = 16350000, 
-               filename = "heatmap_clq")
+               res=200, filename = "heatmap_clq")
 ```
 
 * heatmap_clq.png
@@ -392,7 +386,7 @@ In the "heatmap_clq.png", there are 2 LD blocks. The first LD block contains 2 L
 
 You can choose not to draw block boundaries by using the option `onlyHeatmap = TRUE`.
 The function then ignores the entered block results or not pre-calculates the block results and draws pictures without block boundaries
-```{r LDheat7, results='hide'}
+```{r LDheat7, eval=FALSE}
 # using "onlyHeatmap = TRUE"
 LDblockHeatmap(geno = geno, SNPinfo = SNPinfo, geneinfo = geneinfo,
                startbp = 16000000, endbp = 16200000,
