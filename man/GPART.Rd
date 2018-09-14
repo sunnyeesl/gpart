@@ -47,8 +47,8 @@ when you use the gene information by using \code{geneDB='emsembl'} and \code{ass
 
 \item{endbp}{Numeric constant; last bp position of the \code{chrN}. Default Inf.}
 
-\item{BigLDresult}{Data frame; a result obtained by \code{Big_LD} function. If \code{NULL}(default),
-the \code{GPART} function first excute \code{Big_LD} function to obtain LD blocks estimation result.}
+\item{BigLDresult}{Data frame; a result obtained by \code{BigLD} function. If \code{NULL}(default),
+the \code{GPART} function first excute \code{BigLD} function to obtain LD blocks estimation result.}
 
 \item{minsize}{Numeric constant; the lower bound of number of SNPs in a partition.}
 
@@ -86,7 +86,7 @@ GPART(geno=geno, SNPinfo=SNPinfo, geneinfo=geneinfo)
 
 }
 \seealso{
-\code{\link{Big_LD}}
+\code{\link{BigLD}}
 }
 \author{
 Sun Ah Kim <sunny03@snu.ac.kr>, Yun Joo Yoo <yyoo@snu.ac.kr>

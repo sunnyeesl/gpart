@@ -54,8 +54,8 @@ If the data contains more than one chromosome, you need to specify the chromosom
 
 \item{endbp}{Numeric constant; last bp position of the \code{chrN}.}
 
-\item{blockresult}{Data frame; a result obtained by \code{Big_LD} function or \code{GPART}. If \code{NULL}(default),
-the function first excute \code{Big_LD} or\code{GPART} to obtain block estimation result denpending on the \code{blocktype}.}
+\item{blockresult}{Data frame; a result obtained by \code{BigLD} function or \code{GPART}. If \code{NULL}(default),
+the function first excute \code{BigLD} or\code{GPART} to obtain block estimation result denpending on the \code{blocktype}.}
 
 \item{blocktype}{Character constant; "bigld" for \code{Big-LD} or "gpart" for \code{GPART}. Default is \code{"gpart"}.}
 
@@ -66,7 +66,7 @@ specify the threshold for minsize of a block obtained by \code{GPART}}
 specify the threshold for maxsize of a block obtained by \code{GPART}}
 
 \item{LD}{Character constant; LD measure to use, "r2" or "Dprime" or "Dp-str".
-LD measures for LD heatmap (and Big_LD execution when \code{BigLDresult=NULL}). When \code{LD = "Dp-str"},
+LD measures for LD heatmap (and BigLD execution when \code{BigLDresult=NULL}). When \code{LD = "Dp-str"},
 heatmap shows only two cases, "weak LD or not-informative" and "strong LD". When \code{LD= Dprime} heatmap shows the estimated D' measures.}
 
 \item{MAFcut}{Numeric constant; MAF threshold of SNPs to use.  Default 0.05}
@@ -109,7 +109,7 @@ filename="chr21Heatmap")
 
 }
 \seealso{
-\code{\link{Big_LD}}
+\code{\link{BigLD}}
 }
 \author{
 Sun-Ah Kim <sunny03@snu.ac.kr>, Yun Joo Yoo <yyoo@snu.ac.kr>

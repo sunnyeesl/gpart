@@ -807,7 +807,7 @@ appendcutByForce <- function(LDblocks, Ogeno, OSNPinfo, CLQcut, clstgap,
 
 #################  GPART subFUNCTIONS ########################################################################
 # sub-Functions
-# Big_LD,CLQD, LDblockSplit, dataPreparation,
+# BigLD,CLQD, LDblockSplit, dataPreparation,
 # mergeOverlapGene, LDblockGeneMerge, splitBigLD, mergeSmallRegion, namingRegion2
 #
 # blocks with Big-LD result
@@ -1166,7 +1166,7 @@ namingRegion2 <- function(GeneLDblocks, genelist, chrSNPinfo) {
   return(FinalGeneLDblocks)
 }
 
-geneinfo_ext <- function(geneinfofile=geneinfofile, geneDB = geneDB, assembly = assembly, geneid = geneid,
+geneinfoExt <- function(geneinfofile=geneinfofile, geneDB = geneDB, assembly = assembly, geneid = geneid,
                          ensbversion = ensbversion, chrNs = chrNs){
   if(!is.null(geneinfofile)){
     print("load gene information from inputed file")
@@ -1265,7 +1265,7 @@ geneinfo_ext <- function(geneinfofile=geneinfofile, geneDB = geneDB, assembly = 
 
 
 #gene overlap merging : combine gene region if there are genes with same name
-combine_overlap_samegene = function(genelist){
+combineOverlapSamegene = function(genelist){
   combgene <- names(table(genelist[,1])[table(genelist[,1])>1])
   for(cgene in combgene){
     subgeneinfo <- genelist[genelist[,1]==cgene,]
@@ -1315,7 +1315,7 @@ combine_overlap_samegene = function(genelist){
 # <output>
 #' @return A vector of cluster numbers of all  SNPs (\code{NA} represents singleton cluster).
 #'
-#' @seealso \code{\link{Big_LD}}
+#' @seealso \code{\link{BigLD}}
 #' @examples
 #'
 #' data(geno)
@@ -1526,10 +1526,10 @@ CLQD <- function(geno, SNPinfo, CLQcut=0.5, clstgap=40000, hrstType=c("near-nonh
 
 # Big-LD <input>
 #' @title Estimation of LD block regions
-#' @name Big_LD
-#' @aliases Big_LD
-#' @description \code{Big_LD} returns the estimation of LD block regions of given data.
-#' @usage Big_LD(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL,
+#' @name BigLD
+#' @aliases BigLD
+#' @description \code{BigLD} returns the estimation of LD block regions of given data.
+#' @usage BigLD(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL,
 #' cutByForce=NULL, LD=c("r2", "Dprime"), CLQcut=0.5,
 #' clstgap=40000, CLQmode=c("density", "maximal"),
 #' leng=200, subTaskSize=1500, MAFcut=0.05, appendRare=FALSE,
@@ -1578,18 +1578,18 @@ CLQD <- function(geno, SNPinfo, CLQcut=0.5, clstgap=40000, hrstType=c("near-nonh
 #'
 #' data(geno)
 #' data(SNPinfo)
-#' Big_LD(geno, SNPinfo)
+#' BigLD(geno, SNPinfo)
 #'
-#'
-#' Big_LD(geno, SNPinfo, LD = "Dprime")
-#' Big_LD(geno, SNPinfo, CLQcut = 0.5, clstgap = 40000, leng = 200, subTaskSize = 1500)
-#'
+#' \dontrun{
+#' BigLD(geno, SNPinfo, LD = "Dprime")
+#' BigLD(geno, SNPinfo, CLQcut = 0.5, clstgap = 40000, leng = 200, subTaskSize = 1500)
+#' }
 #' @importFrom stats cor median quantile
 #' @importFrom utils tail
 #' @importFrom Rcpp sourceCpp
 #' @export
 
-Big_LD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutByForce=NULL,
+BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutByForce=NULL,
                    LD=c("r2", "Dprime"), CLQcut=0.5, clstgap=40000, CLQmode=c("density", "maximal"),
                    leng=200, subTaskSize=1500, MAFcut=0.05, appendRare=FALSE,  hrstType=c("near-nonhrst", "fast", "nonhrst"), hrstParam=200,
                    chrN=NULL, startbp=-Inf, endbp=Inf)
@@ -1780,8 +1780,8 @@ Big_LD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutB
 #' @param chrN Numeric(or Character) constant (or vector); chromosome number to use. If \code{NULL}(default), we use all chromosome.
 #' @param startbp Numeric constant; starting bp position of the \code{chrN}. Default -Inf.
 #' @param endbp Numeric constant; last bp position of the \code{chrN}. Default Inf.
-#' @param BigLDresult Data frame; a result obtained by \code{Big_LD} function. If \code{NULL}(default),
-#' the \code{GPART} function first excute \code{Big_LD} function to obtain LD blocks estimation result.
+#' @param BigLDresult Data frame; a result obtained by \code{BigLD} function. If \code{NULL}(default),
+#' the \code{GPART} function first excute \code{BigLD} function to obtain LD blocks estimation result.
 #' @param minsize Numeric constant; the lower bound of number of SNPs in a partition.
 #' @param maxsize Numeric constant; the upper bound of number of SNPs in a partition.
 #' @param LD Character constant; LD measure to use, r2 or Dprime.
@@ -1800,7 +1800,7 @@ Big_LD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutB
 #' basepair position of the first SNP and last SNP, blocksize, Name of a block)
 #'
 #' @author Sun Ah Kim <sunny03@snu.ac.kr>, Yun Joo Yoo <yyoo@snu.ac.kr>
-#' @seealso \code{\link{Big_LD}}
+#' @seealso \code{\link{BigLD}}
 #'
 #'
 #' @examples
@@ -1854,8 +1854,8 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
   SNPinfo <- SNPinfo[MAF>=MAFcut,]
 
   if(is.null(BigLDresult)){
-    print("Start to execute Big_LD function!")
-    BigLDresult <- Big_LD(geno, SNPinfo, CLQcut=CLQcut, CLQmode=CLQmode, LD=LD, MAFcut=MAFcut)#, MAFcut=MAFcut
+    print("Start to execute BigLD function!")
+    BigLDresult <- BigLD(geno, SNPinfo, CLQcut=CLQcut, CLQmode=CLQmode, LD=LD, MAFcut=MAFcut)#, MAFcut=MAFcut
     print("Big-LD, done!")
   }else{
     print("Use the inputted BigLD result")
@@ -1873,7 +1873,7 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
   # gene based
   # load gene info
   if(is.null(geneinfo)){
-    geneinfo <- geneinfo_ext(geneinfofile=geneinfofile, geneDB = geneDB, assembly = assembly, geneid = geneid,
+    geneinfo <- geneinfoExt(geneinfofile=geneinfofile, geneDB = geneDB, assembly = assembly, geneid = geneid,
                              ensbversion = ensbversion, chrNs = chrNs)
   }
   if(GPARTmode == "geneBased"){
@@ -1889,7 +1889,7 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
       genelist <- geneinfo[which(geneinfo[,2] == chrN), ]
       colnames(genelist)<- c("genename", "chr", "start.bp", "end.bp")
       genelist <- genelist[order(genelist[,3]),,drop=FALSE]
-      genelist <- combine_overlap_samegene(genelist)
+      genelist <- combineOverlapSamegene(genelist)
       GeneRegionSNPs1 <- NULL
       for (i in seq_len(dim(genelist)[1])){
         test <- (which(chrSNPinfo[, 3] >= genelist[i, 3] & chrSNPinfo[, 3] <= genelist[i, 4]))
@@ -1975,7 +1975,7 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
       genelist <- geneinfo[which(geneinfo[,2] == chrN), ]
       colnames(genelist)<- c("genename", "chr", "start.bp", "end.bp")
       genelist <- genelist[order(genelist[,3]),]
-      genelist <- combine_overlap_samegene(genelist)
+      genelist <- combineOverlapSamegene(genelist)
       # gene-region merging
       GeneRegionSNPs1 <- NULL
       for (i in seq_len(dim(genelist)[1])){
@@ -2134,15 +2134,15 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
 #' If the data contains more than one chromosome, you need to specify the chromosome to show.
 #' @param startbp Numeric constant; starting bp position of the \code{chrN}.
 #' @param endbp Numeric constant; last bp position of the \code{chrN}.
-#' @param blockresult Data frame; a result obtained by \code{Big_LD} function or \code{GPART}. If \code{NULL}(default),
-#' the function first excute \code{Big_LD} or\code{GPART} to obtain block estimation result denpending on the \code{blocktype}.
+#' @param blockresult Data frame; a result obtained by \code{BigLD} function or \code{GPART}. If \code{NULL}(default),
+#' the function first excute \code{BigLD} or\code{GPART} to obtain block estimation result denpending on the \code{blocktype}.
 #' @param blocktype Character constant; "bigld" for \code{Big-LD} or "gpart" for \code{GPART}. Default is \code{"gpart"}.
 #' @param minsize Integer constant; when \code{blockresult=NULL, blocktype="gpart"}
 #' specify the threshold for minsize of a block obtained by \code{GPART}
 #' @param maxsize Integer constant; when \code{blockresult=NULL, blocktype="gpart"}
 #' specify the threshold for maxsize of a block obtained by \code{GPART}
 #' @param LD Character constant; LD measure to use, "r2" or "Dprime" or "Dp-str".
-#' LD measures for LD heatmap (and Big_LD execution when \code{BigLDresult=NULL}). When \code{LD = "Dp-str"},
+#' LD measures for LD heatmap (and BigLD execution when \code{BigLDresult=NULL}). When \code{LD = "Dp-str"},
 #' heatmap shows only two cases, "weak LD or not-informative" and "strong LD". When \code{LD= Dprime} heatmap shows the estimated D' measures.
 #' @param MAFcut Numeric constant; MAF threshold of SNPs to use.  Default 0.05
 #' @param CLQcut Numeric constant; threshold for the correlation value |r|, between 0 to 1. Default 0.5.
@@ -2162,7 +2162,7 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
 #' basepair position of the first SNP and last SNP, blocksize, Name of a block)
 #'
 #' @author Sun-Ah Kim <sunny03@snu.ac.kr>, Yun Joo Yoo <yyoo@snu.ac.kr>
-#' @seealso \code{\link{Big_LD}}
+#' @seealso \code{\link{BigLD}}
 #'
 #' @examples
 #'
@@ -2215,7 +2215,7 @@ LDblockHeatmap <- function(geno=NULL, SNPinfo=NULL, genofile=NULL, SNPinfofile=N
   }
   if(is.null(geneinfo)){
     if(geneshow == TRUE){
-      geneinfo <- geneinfo_ext(geneinfofile=geneinfofile, geneDB = geneDB, assembly = assembly, geneid = geneid,
+      geneinfo <- geneinfoExt(geneinfofile=geneinfofile, geneDB = geneDB, assembly = assembly, geneid = geneid,
                                ensbversion = ensbversion, chrNs = chrN)
     }
   }
@@ -2308,7 +2308,7 @@ LDblockHeatmap <- function(geno=NULL, SNPinfo=NULL, genofile=NULL, SNPinfofile=N
     blockresult <- blockresult[blockresult[,2]!=blockresult[,3],,drop=FALSE]
   }else if ((is.null(blockresult)) & (onlyHeatmap == FALSE)){
     if(blocktype == "bigld"){
-      oblockresult <- Big_LD(geno=geno, SNPinfo=SNPinfo, CLQcut=CLQcut, CLQmode=CLQmode, LD=LDcal, MAFcut=MAFcut)
+      oblockresult <- BigLD(geno=geno, SNPinfo=SNPinfo, CLQcut=CLQcut, CLQmode=CLQmode, LD=LDcal, MAFcut=MAFcut)
       blockresult <- oblockresult
     }else if(blocktype == "gpart"){
       oblockresult <- GPART(geno=geno, SNPinfo=SNPinfo, geneinfo = geneinfo, CLQcut=CLQcut, CLQmode=CLQmode, LD=LDcal,
@@ -2336,7 +2336,7 @@ LDblockHeatmap <- function(geno=NULL, SNPinfo=NULL, genofile=NULL, SNPinfofile=N
     nowgeneinfo <- geneinfo[geneinfo[,2]==chrN,,drop=FALSE]
     nowgeneinfo <- nowgeneinfo[which(nowgeneinfo[,3]<SNPedbp & nowgeneinfo[,4]>SNPstbp),,drop=FALSE]
     nowgeneinfo <- nowgeneinfo[order(nowgeneinfo[,3]),,drop=FALSE]
-    nowgeneinfo <- combine_overlap_samegene(nowgeneinfo)
+    nowgeneinfo <- combineOverlapSamegene(nowgeneinfo)
   }else{
     print("There is no gene region information!")
     nowgeneinfo <- matrix(1,1,1)[-1,,drop=FALSE]

@@ -51,7 +51,7 @@ CLQmode = 'density')
 
 }
 \seealso{
-\code{\link{Big_LD}}
+\code{\link{BigLD}}
 }
 \author{
 Sun-Ah Kim <sunny03@snu.ac.kr>, Yun Joo Yoo <yyoo@snu.ac.kr>
