@@ -157,7 +157,7 @@ We can force specified SNP to be the last SNP in a block using `cutByForce` opti
 
 ```{r BigLDeg4, results='hide'}
 cutlist = rbind(c(21, "rs440600", 16051956), c(21, "rs9979041", 16055738))
-res6 = BigLD(geno = geno, SNPinfo = SNPinfo, cutByForce = cutlist)
+res6 = BigLD(geno = geno[, 1:100], SNPinfo = SNPinfo[1:100,], cutByForce = cutlist)
 ```
 ```{r BigLDeg4show}
 print(cutlist)
@@ -184,8 +184,8 @@ The GPART functions uses BigLD results as an initial clustering results. Therefo
 ```{r GPARTeg0}
 # gene based GPART using the pre-calculated BigLD result 'res1'
 # default minsize = 4, maxsize = 50
-Gres0 = GPART(geno = geno, SNPinfo = SNPinfo, geneinfo = geneinfo, BigLDresult = res1,
-              minsize = 4, maxsize = 50)
+Gres0 = GPART(geno = geno[,1:500], SNPinfo = SNPinfo[1:500,], geneinfo = geneinfo,
+              BigLDresult = res1, minsize = 4, maxsize = 50)
 ```
 
 #### Values
@@ -283,6 +283,9 @@ Set the option `filename` and `res` to specify the file name and resolution of a
 LDblockHeatmap(geno = geno[,1:1500], SNPinfo = SNPinfo[1:1500,], 
                geneinfo = geneinfo, blockresult = res1, 
                filename = "heatmap1", res = 200)
+```
+
+```{r LDheat1-1, eval=FALSE}
 # If there is no inputted Big-LD result,
 # the function will calculate the BigLD result first and then draw the figure using the result.
 LDblockHeatmap(geno = geno[,1:1500], SNPinfo = SNPinfo[1:1500,], 
