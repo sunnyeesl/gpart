@@ -29,4 +29,7 @@ test_that("CLQD", {
   test1 <- CLQD(geno = testmat, SNPinfo = testSNP)
   test1exp <- c(rep(1, 7), rep(NA, 3))
   expect_equal(test1, test1exp)
+
+  test2 <- CLQD(geno = testmat, SNPinfo = testSNP, clstgap = 3)
+  expect_true(all(is.na(test2)))
 })
