@@ -1309,7 +1309,7 @@ CLQD <- function(geno, SNPinfo, CLQcut=0.5, clstgap=40000, hrstType=c("near-nonh
   binvector <- rep(NA, dim(OCM)[2])
   binnum <- 1
   # re.SNPbps <- SNPbps
-  if(all(OCM==0)) return(seq_len(length(binvector)))
+  if(all(OCM==0)) return(binvector)
 
   # test graph complexity
   OCM1 <- OCM
@@ -1628,9 +1628,11 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
       message(paste(Sys.time()," | ", "chr",chrN,":",min(subSNPinfo[,3]), "-" ,max(subSNPinfo[,3]), " | sub-region: ", i,"/",dim(cutblock)[1],  sep = ""))
       subbinvec <- CLQD(geno = subgeno, SNPinfo = subSNPinfo, CLQcut = CLQcut, clstgap = clstgap, hrstType=hrstType,
                         hrstParam = hrstParam, CLQmode = CLQmode, LD = LD)
+
       # chrCLQres <- c(chrCLQres, subbinvec)
       chrCLQres[nowst: nowed]<-subbinvec
       cat('CLQ done!\r')
+      if(all(is.na(testvec) == TRUE)) next;
       bins <- seq_len(max(subbinvec[which(!is.na(subbinvec))]))
       clstlist <- lapply(bins, function(x) which(subbinvec  == x))
       clstlist <- lapply(clstlist, sort)  ###
