@@ -1,17 +1,3 @@
-# 20180620 BigLD2 packages
-# 20180620 update : maxsize for heatmap 10000->20000
-# 20180712 : heuristic procedure modify
-# 20180725 : two kind of heuristic algorithm
-#         1. fast version (Bioinformatics version)
-#         2. similar to nonhrst algorithm
-# 20180731 : LD block reconst modify
-# 20180806 : LDblockHeatmap modified -
-# 20180813 : GPART LD-D' modify
-# 20180814 : LDblockHeatmap can draw the GPART result
-# 20180814 : Dprime version bug fix (for small region,
-#           wrong dprime figure returned)
-# 20180827 : gene information
-# setwd("D:/Dropbox/Research/LDblockFuns/")
 #' @useDynLib gpart, .registration = TRUE
 #'
 
