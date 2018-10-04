@@ -119,7 +119,7 @@ Big-LD have several distinctive features. Since the Big-LD algorithm designed ba
 ```{r BigLDeg1}
 # Use the options `geno` and `SNPinfo` to input additive genotype data and SNP information data respectively.
 # use r2 measure (default)
-res1 = BigLD(geno = geno, SNPinfo = SNPinfo) 
+res1 = BigLD(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,]) 
 ```
 
 ```{r BigLDeg1-1, eval=FALSE}
@@ -204,7 +204,7 @@ In other ways, you can make that the GPART function automatically run the `BigLD
 # The input data of GPART must be the same as the input data used to obtain 'res1'
 # note that the `res1` is obtained by using the first 1000 SNPs in geno.
 # default minsize = 4, maxsize = 50
-Gres0 = GPART(geno = geno, SNPinfo = SNPinfo, 
+Gres0 = GPART(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,], 
               geneinfo = geneinfo,BigLDresult = res1, 
               minsize = 4, maxsize = 50)
 ```

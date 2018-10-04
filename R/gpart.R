@@ -1516,7 +1516,7 @@ CLQD <- function(geno, SNPinfo, CLQcut=0.5, clstgap=40000, hrstType=c("near-nonh
 #'
 #' data(geno)
 #' data(SNPinfo)
-#' BigLD(geno[,1:200], SNPinfo[1:200,])
+#' BigLD(geno[,1:100], SNPinfo[1:100,])
 #'
 #' \dontrun{
 #' BigLD(geno, SNPinfo, LD = "Dprime")
@@ -1761,7 +1761,7 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
 #' data(geno)
 #' data(SNPinfo)
 #' data(geneinfo)
-#' GPART(geno=geno[,1:200], SNPinfo=SNPinfo[1:200,], geneinfo=geneinfo)
+#' GPART(geno=geno[,1:100], SNPinfo=SNPinfo[1:100,], geneinfo=geneinfo)
 #'
 #' @importFrom stats cor median quantile
 #' @importFrom utils tail
@@ -2134,7 +2134,7 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
 #'
 #' @examples
 #'
-#' LDblockHeatmap(geno=geno[,1:200], SNPinfo=SNPinfo[1:200,], geneinfo=geneinfo,
+#' LDblockHeatmap(geno=geno[,1:100], SNPinfo=SNPinfo[1:100,], geneinfo=geneinfo,
 #' filename="chr21Heatmap")
 #'
 #' @importFrom grDevices adjustcolor colorRampPalette dev.off heat.colors png tiff
