@@ -18,12 +18,13 @@ vignette: >
 
 In this package **gpart**, we provide a new SNP sequence partitioning method which partitions the whole SNP sequence based on not only LD block structures but also gene location information. The LD block construction for GPART is performed using Big-LD algorithm, with additional improvement from previous version reported in Kim et al.(2017). We also add a visualization tool to show the LD heatmap with the information of LD block boundaries and gene locations in the package.
 
-**gpart** including 4 functions as follows.
+**gpart** including 5 functions as follows.
 
 * CLQD
 * BigLD
 * GPART
 * LDblockHeatmap
+* convert2GRange
 
 <!-- The **BigLD** was developed based on the existing **BigLD** packages. The **BigLD2** adopts a new heuristic algorithm for CLQ algorithm, and supports various input file types and LD measure (D' added). The `GPART` function, newly developed in this package, partitions the whole SNP sequences into blocks which satisfying the pre-defined size thresholds. Also visualization function `LDblockHeatmap2` shows not only heatmap and block boundaries but also gene information, bp position, and CLQ results. -->
 
@@ -118,7 +119,7 @@ Big-LD have several distinctive features. Since the Big-LD algorithm designed ba
 ```{r BigLDeg1}
 # Use the options `geno` and `SNPinfo` to input additive genotype data and SNP information data respectively.
 # use r2 measure (default)
-res1 = BigLD(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,]) 
+res1 = BigLD(geno = geno, SNPinfo = SNPinfo) 
 ```
 
 ```{r BigLDeg1-1, eval=FALSE}
@@ -128,7 +129,7 @@ res1_dp = BigLD(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,]
 ```
 
 #### Values
-BigLD returns a data frames of Big-LD results, and it contains 7 information of each block (chromosome name, indices of the first SNP and last SNP, rsID of the first SNP and last SNP, bp of the first SNP and last SNP)
+BigLD returns a data frame which contains 7 information of each block (chromosome name, indices of the first SNP and last SNP, rsID of the first SNP and last SNP, bp of the first SNP and last SNP)
 
 ```{r BigLDeg1show}
 head(res1)
@@ -154,14 +155,31 @@ res5 = BigLD(geno = geno, SNPinfo = SNPinfo, MAFcut = 0.1, appendRare = TRUE)
 
 We can force specified SNP to be the last SNP in a block using `cutByForce` option.
 
-```{r BigLDeg4, results='hide'}
+```{r BigLDeg4, eval=FALSE}
 cutlist = rbind(c(21, "rs440600", 16051956), c(21, "rs9979041", 16055738))
 res6 = BigLD(geno = geno[, 1:100], SNPinfo = SNPinfo[1:100,], cutByForce = cutlist)
 ```
+```{r BigLDeg4-1, include=FALSE}
+cutlist = rbind(c(21, "rs440600", 16051956), c(21, "rs9979041", 16055738))
+res6 = BigLD(geno = geno[, 1:100], SNPinfo = SNPinfo[1:100,], cutByForce = cutlist)
+```
+
 ```{r BigLDeg4show}
 print(cutlist)
 head(res6)
 ```
+
+If you want to obtain BigLD results of some specific region of an input data, you can speicify the region to calculate by using the options `chrN`, `startbp`, and `endbp`.
+```{r BigLDeg7, eval=FALSE}
+res7 = BigLD(geno = geno, SNPinfo = SNPinfo, startbp = 16058400, endbp = 16076500)
+```
+```{r BigLDeg7-1, include=FALSE}
+res7 = BigLD(geno = geno, SNPinfo = SNPinfo, startbp = 16058400, endbp = 16076500)
+```
+```{r BigLDeg7show}
+res7
+```
+
 
 
 ### GPART function
@@ -186,8 +204,9 @@ In other ways, you can make that the GPART function automatically run the `BigLD
 # The input data of GPART must be the same as the input data used to obtain 'res1'
 # note that the `res1` is obtained by using the first 1000 SNPs in geno.
 # default minsize = 4, maxsize = 50
-Gres0 = GPART(geno = geno[,1:1000], SNPinfo = SNPinfo[1:1000,], geneinfo = geneinfo,
-              BigLDresult = res1, minsize = 4, maxsize = 50)
+Gres0 = GPART(geno = geno, SNPinfo = SNPinfo, 
+              geneinfo = geneinfo,BigLDresult = res1, 
+              minsize = 4, maxsize = 50)
 ```
 
 #### Values
@@ -199,12 +218,13 @@ head(Gres0)
 ```
 
 < Naming Examples >
+
 * before-Gene1-part1 : 1st block located before 1st gene (No overlapping LD block with the Gene1).
 * before-Gene1-part2 : 2nd block located at before 1st gene region.
-* Gene2/Gene3-part1 : 1st block overlapping Gene2/Gene3 region.
+* Gene2/Gene3-part1 : 1st block overlapping Gene2/Gene3 region (Gene2 and Gene3 are overlaped). 
 * Gene4-Gene5-part1 : 1st block which have a common LD block overlapping both Gene4 and Gene5 gene regions.
 * Gene4-Gene5-part2 : 2nd block which have a common LD block overlapping both Gene4 and Gene5 gene regions.
-* inter-Gene5-Gene6-part1 : 1st block located at the intergenic region between Gene5 and Gene6
+* inter-Gene5:Gene6-part1 : 1st block located at the intergenic region between Gene5 and Gene6
 * Gene6-part1 : 1st block overlapping Gene6 region
 * after-Gene100-part1 : 1st block located at the region after the lastly located Gene100
 
@@ -414,3 +434,8 @@ You can convert an output of `BigLD` or `GPART` in data.frame format to a `GRang
 BigLD_grange = convert2GRange(res1)
 BigLD_grange
 ```
+
+# References
+
+* Gabriel, Stacey B., et al. "The structure of haplotype blocks in the human genome." Science 296.5576 (2002): 2225-2229.
+* Kim, Sun Ah, et al. "A new haplotype block detection method for dense genome sequencing data based on interval graph modeling of clusters of highly correlated SNPs." Bioinformatics 34.3 (2017): 388-397.
