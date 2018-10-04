@@ -10,8 +10,8 @@
 #'
 #' @examples
 #'
-#' testBigLD = BigLD(geno=geno[,1:200], SNPinfo=SNPinfo[1:200,])
-#' convert2GRange(testBigLD)
+#' testBigLD <- BigLD(geno=geno[,1:200], SNPinfo=SNPinfo[1:200,])
+#' testBigLD_grange <- convert2GRange(testBigLD)
 #'
 #' @author Sun-Ah Kim <sunny03@snu.ac.kr>, Yun Joo Yoo <yyoo@snu.ac.kr>
 #' @importFrom GenomicRanges GRanges
