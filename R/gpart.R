@@ -1563,6 +1563,9 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
     if(is.null(geno) |is.null(SNPinfo)){
       stop("Need input data (or files)")
     }
+    if(ncol(geno) != nrow(SNPinfo)){
+      stop("The number of SNPs in geno and SNPinfo are not matched")
+    }
     geno <- as.matrix(geno)
     # header generation
     if(is.null(chrN)) chrN <- unique(SNPinfo[,1])
@@ -1708,7 +1711,7 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
     stindex <- stindex + dim(chrSNPinfo)[1]
     totalLDBres <- rbind(totalLDBres, chrLDblocks)
   } # end for current chr
-  message("BigLD done!")
+  message("\nBigLD done!")
   return(totalLDBres)
 }
 
@@ -1809,6 +1812,9 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
     SNPinfo <- SNPinfo
     if(is.null(geno) |is.null(SNPinfo)){
       stop("Need input data (or files)")
+    }
+    if(ncol(geno) != nrow(SNPinfo)){
+      stop("The number of SNPs in geno and SNPinfo are not matched")
     }
     if(is.null(chrN)) chrN <- unique(SNPinfo[,1])
     colnames(SNPinfo) <- c("chrN", "rsID", "bp")
@@ -2184,6 +2190,9 @@ LDblockHeatmap <- function(geno=NULL, SNPinfo=NULL, genofile=NULL, SNPinfofile=N
     if(is.null(geno) |is.null(SNPinfo)){
       stop("Need input data (or files)")
     }
+    if(ncol(geno) != nrow(SNPinfo)){
+      stop("The number of SNPs in geno and SNPinfo are not matched")
+    }
     if(is.null(chrN)){
       if(length(unique(SNPinfo[,1]))==1){
         chrN <- unique(SNPinfo[,1])
@@ -2191,6 +2200,7 @@ LDblockHeatmap <- function(geno=NULL, SNPinfo=NULL, genofile=NULL, SNPinfofile=N
         stop("Please choose a chromosome!")
       }
     }
+    colnames(SNPinfo) <- c("chrN", "rsID", "bp")
     geno <- as.matrix(geno)
   }
   if(is.null(geneinfo)){
