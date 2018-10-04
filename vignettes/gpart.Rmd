@@ -36,7 +36,10 @@ In this package **gpart**, we provide a new SNP sequence partitioning method whi
 
 Download and install the most current of "gpart".
 
-```{r library}
+```{r library, eval=FALSE}
+library(gpart)
+```
+```{r library_call, include=FALSE}
 library(gpart)
 ```
 
@@ -402,4 +405,12 @@ The function then ignores the entered block results or not pre-calculates the bl
 # using "onlyHeatmap = TRUE"
 LDblockHeatmap(geno = geno, SNPinfo = SNPinfo, geneinfo = geneinfo,
                onlyHeatmap = TRUE, filename = "heatmap_no_bound", res = 150)
+```
+### convert2GRange
+
+You can convert an output of `BigLD` or `GPART` in data.frame format to a `GRanges` object.
+
+```{r convert2GRange}
+BigLD_grange = convert2GRange(res1)
+BigLD_grange
 ```
