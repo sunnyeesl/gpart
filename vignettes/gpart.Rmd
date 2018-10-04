@@ -40,10 +40,7 @@ In this package **gpart**, we provide a new SNP sequence partitioning method whi
 
 Download and install the most current of "gpart".
 
-```{r library, eval=FALSE}
-library(gpart)
-```
-```{r library_call, include=FALSE}
+```{r library}
 library(gpart)
 ```
 
