@@ -1632,7 +1632,7 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
       # chrCLQres <- c(chrCLQres, subbinvec)
       chrCLQres[nowst: nowed]<-subbinvec
       cat('CLQ done!\r')
-      if(all(is.na(testvec) == TRUE)) next;
+      if(all(is.na(subbinvec) == TRUE)) next;
       bins <- seq_len(max(subbinvec[which(!is.na(subbinvec))]))
       clstlist <- lapply(bins, function(x) which(subbinvec  == x))
       clstlist <- lapply(clstlist, sort)  ###
