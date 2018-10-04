@@ -1472,10 +1472,6 @@ CLQD <- function(geno, SNPinfo, CLQcut=0.5, clstgap=40000, hrstType=c("near-nonh
     if(length(split.bp.cliques)==0) break
     # message(sum(is.na(binvector)))
   }  ##end repeat
-
-  if (all(is.na(binvector) == TRUE)) {
-    binvector <- seq_len(length(binvector))
-  }
   return(binvector)
 }
 
