@@ -129,49 +129,7 @@ heuristicCLQ <- function(subOCM, hrstParam)
   }
 }
 
-heuristicCLQ2 <- function(subOCM, hrstParam)
-{
-  degs <- apply(subOCM, 1, sum)
-  diag(subOCM)<-0
-  v_num <- length(degs)
-  new_v_density <- sum(subOCM)/(v_num^2 - v_num)
-  if(new_v_density>=0.95) {
-    return(seq_len(v_num))
-  }
-  heuristicBinbasket <- NULL
-  total_density <- NULL
-  v_dens_all <- c()
-  find_opt <- FALSE
-  Vs <- seq_len(v_num)
-  v_density <- 0
-  v_dens_all<-c(v_dens_all, new_v_density)
-  heuristicBinbasket <- c(heuristicBinbasket, list(Vs))
-  while(TRUE){ # (new_v_density) > (v_density+0.0001)
-    newdeg <- apply(subOCM[Vs,], 1, sum)
-    if(length(which(newdeg==min(newdeg)))>10){
-      rmlist <- sample(which(newdeg==min(newdeg)), 1)
-    }else{
-      rmlist <- which(newdeg==min(newdeg))
-    }
-    # Vs_candi <- Vs[-(rmlist)]
-    candibin <- setdiff(Vs, Vs[rmlist])
-    v_density <- new_v_density
-    new_v_density <- sum(subOCM[candibin,candibin])/(length(candibin)^2 - length(candibin))
-    if(new_v_density>=0.95){
-      return(candibin)
-      break
-    }else{
-      Vs <- candibin
-      v_dens_all<-c(v_dens_all, new_v_density)
-      heuristicBinbasket <- c(heuristicBinbasket, list(Vs))
-    }
-    v_num <- length(Vs)
-    print(c(new_v_density, length(Vs)))
-    if(v_num < (hrstParam*(2/3))) break
-  }#end while
 
-  return(heuristicBinbasket[[which(v_dens_all == max(v_dens_all))]])
-}
 ################# BigLD subFUNCTIONS ##########################
 # subfunctions : CLQD,
 # dataPreparation , cutsequence, intervalCliqueList,
@@ -260,7 +218,7 @@ dataPreparation <- function(genofile, SNPinfofile, geno, SNPinfo,
       geno <- data.table::fread(genofile, header=FALSE, sep = " ", colClasses = "character")
       geno <- geno[,-seq_len(6)]
       geno <- as.matrix(geno)
-      print(dim(geno))
+      # message(dim(geno))
       if(is.null(chrN)) chrN <- unique(SNPinfo[,1])
       if(startbp != -Inf | endbp != Inf){
         if((length(chrN)>1) | (length(unique(SNPinfo[,1]))>1))
@@ -290,7 +248,7 @@ dataPreparation <- function(genofile, SNPinfofile, geno, SNPinfo,
         geno[,(i)]<- nline
       }
       geno<-geno[,seq_len(ncol(geno)/2)]
-      print(dim(geno))
+      # message(dim(geno))
       class(geno)<-"integer"
       # remove multi-allelic
       if(length(multiAllele)>0){
@@ -322,7 +280,7 @@ dataPreparation <- function(genofile, SNPinfofile, geno, SNPinfo,
     stop("Please check your input files.\n(supporting file format: txt, ped, map, raw, traw, vcf)")
   }
   #choose chrN
-  print("data reformating done!")
+  message("data reformating done!")
   reverseind <- which(colSums(geno)>nrow(geno))
   geno[,reverseind] <- 2-geno[,reverseind]
   class(SNPinfo$bp)<-"numeric"
@@ -337,7 +295,7 @@ dataPreparation <- function(genofile, SNPinfofile, geno, SNPinfo,
 }
 cutsequence <- function(geno, SNPinfo, leng, subTaskSize, LD, clstgap, CLQcut, cutByForce)
 {
-  print("start to split the whole sequence into sub-task regions")
+  message("start to split the whole sequence into sub-task regions")
   modeNum <- 1
   lastnum <- 0
   nSNPs <- dim(SNPinfo)[1]
@@ -354,7 +312,7 @@ cutsequence <- function(geno, SNPinfo, leng, subTaskSize, LD, clstgap, CLQcut, c
     precutpoints <- c(precutpoints, precutpoints1)
   }
   if (dim(geno)[2] <= subTaskSize) {
-    print("there is only one sub-region!")
+    message("there is only one sub-region!")
     return(list(dim(geno)[2], NULL))
   } else {
     calterms <- c(1, 10, leng)
@@ -370,7 +328,7 @@ cutsequence <- function(geno, SNPinfo, leng, subTaskSize, LD, clstgap, CLQcut, c
         lastnum <- i
         cat("total SNPs = ",nSNPs, " | cutpoint = ", i, "\r")
         i<-i+(leng/2)
-        # print(i)
+        # message(i)
         cutnow <- FALSE
       }else{
         for(j in calterms){
@@ -389,7 +347,7 @@ cutsequence <- function(geno, SNPinfo, leng, subTaskSize, LD, clstgap, CLQcut, c
           }
           if(j == leng){
             cutnow <- TRUE
-            # print(i)
+            # message(i)
           }
         }
         if(cutnow == TRUE){
@@ -409,7 +367,6 @@ cutsequence <- function(geno, SNPinfo, leng, subTaskSize, LD, clstgap, CLQcut, c
         diffseq <- diff(cutpoints)
         recutpoint <- which(diffseq > subTaskSize)
         nowmaxsize <- max(diff(cutpoints))
-        # print(nowmaxsize) print(recutpoint)
         tt <- cbind((cutpoints[recutpoint] + 1), cutpoints[recutpoint + 1])
         numvec <- NULL
         for (i in seq_len(dim(tt)[1])){
@@ -443,7 +400,7 @@ cutsequence <- function(geno, SNPinfo, leng, subTaskSize, LD, clstgap, CLQcut, c
         cutpoints <- sort(c(cutpoints, numvec))
         newcandi <- which(diff(cutpoints) > subTaskSize)
         # remaxsize <- max(diff(cutpoints))
-        # print(remaxsize) print(newcandi)
+        # message(remaxsize) message(newcandi)
         if (length(newcandi) == 0) {
           break
         }
@@ -451,7 +408,7 @@ cutsequence <- function(geno, SNPinfo, leng, subTaskSize, LD, clstgap, CLQcut, c
     }
     ##end while
     if(modeNum == 2){
-      print(paste("split the whole sequence into sub-task regions of length", subTaskSize))
+      message(paste("split the whole sequence into sub-task regions of length", subTaskSize))
       precutpoints <- which(SNPbpgap>clstgap)
       cutpoints <- seq(subTaskSize, dim(geno)[2], subTaskSize)
       remaincutpoints <- vapply(cutpoints, function(x) sum(abs(x-precutpoints)<(leng/2))<1, TRUE)
@@ -465,7 +422,7 @@ cutsequence <- function(geno, SNPinfo, leng, subTaskSize, LD, clstgap, CLQcut, c
     }
   }
   cat("\n")
-  print("splitting sequence, done!")
+  message("splitting sequence, done!")
   if(!is.null(atfcut)) atfcut <- sort(atfcut)
   cutpoints <- unique(c(cutpoints, precutpoints))
   return(list(sort(cutpoints), atfcut))
@@ -489,8 +446,8 @@ intervalCliqueList <- function(clstlist)
   diag(adjacencyM) <- 0
   interval.graph <- igraph::graph.adjacency(adjacencyM, mode="undirected",
                                             weighted=TRUE, diag=FALSE, add.colnames=NULL)
-  # print(paste("max coreness", max(coreness(interval.graph))))
-  # print(paste("ecount", ecount(interval.graph), "vertex*5 ", 5*IMsize))
+  # message(paste("max coreness", max(coreness(interval.graph))))
+  # message(paste("ecount", ecount(interval.graph), "vertex*5 ", 5*IMsize))
   if(max(igraph::coreness(interval.graph))>10){ #ecount(interval.graph)> 5*IMsize|
     interval.cliques <- igraph::maximal.cliques(interval.graph, min=1)
   }else{
@@ -590,7 +547,6 @@ constructLDblock <- function(clstlist, subSNPinfo)
       break
     }else{
       allsnps <- lapply(clstlist, function(x) c(min(x):max(x)))
-      # onlybp <- subSNPinfo[, 2]
       candi.interval <- intervalCliqueList(clstlist)
       intervals <- candi.interval[,seq_len(2),drop=FALSE]  ## list of SNPs in each cliques
       weight.itv <- candi.interval[,3]  ## weights of each cliques
@@ -634,7 +590,7 @@ subBigLD <- function(subgeno, subSNPinfo,  CLQcut, clstgap, CLQmode, hrstParam, 
   clstlist <- lapply(clstlist, sort)  ###
   clstlist <- clstlist[order(vapply(clstlist, min, 1))]  ###
   nowLDblocks <- constructLDblock(clstlist, subSNPinfo)
-  # print('constructLDblock done!')
+  # message('constructLDblock done!')
   nowLDblocks <- nowLDblocks[order(nowLDblocks[, 1]), , drop=FALSE]
   return(nowLDblocks)
 }
@@ -727,7 +683,7 @@ appendcutByForce <- function(LDblocks, Ogeno, OSNPinfo, CLQcut, clstgap,
           firstSNPs <- NsecondSNPs
         }else{
           #merge two blocks
-          # print(paste("i", i,"now!!!!!!"))
+          # message(paste("i", i,"now!!!!!!"))
           subgeno <- Ogeno[, c(min(firstSNPs):max(secondSNPs))]
           subSNPinfo <- OSNPinfo[c(min(firstSNPs):max(secondSNPs)),]
           if(dim(subgeno)[2]<=3000){
@@ -760,7 +716,7 @@ appendcutByForce <- function(LDblocks, Ogeno, OSNPinfo, CLQcut, clstgap,
           }
         }
         cat(paste(i," | ", dim(LDblocks)[1], "\r", sep = ""))
-        # print(tail(expandB))
+        # message(tail(expandB))
         # if(i >= 30) break
       }
     }
@@ -819,7 +775,7 @@ LDblockSplit <- function(geno, LDblocks, maxsize, LD){
   btwr2 <- NULL
   if(length(LargeBlocksN)!=0){
     while(dim(LargeBlocks)[1]>0){
-      # print(dim(LargeBlocks))
+      # message(dim(LargeBlocks))
       nowblocks <- LargeBlocks[1,]
       # if(nowblocks[1]>4000) break
       if(is.null(btwr2)){
@@ -839,16 +795,16 @@ LDblockSplit <- function(geno, LDblocks, maxsize, LD){
         addN <- which(subbtwr2 == min(subbtwr2))+ (ceiling(length(btwr2)/2)-(maxsize*0.2)) - 1
         Newblocks <- rbind(Newblocks, c(nowblocks[1], (nowblocks[1]+addN-1)))
         if(Newblocks[dim(Newblocks)[1], 2]-Newblocks[dim(Newblocks)[1], 1]>=maxsize) {
-          print(Newblocks[dim(Newblocks)[1], ])
+          # message(Newblocks[dim(Newblocks)[1], ])
           break}
         Newblocks <- rbind(Newblocks, c(nowblocks[1]+addN, nowblocks[2]))
         if(Newblocks[dim(Newblocks)[1], 2]-Newblocks[dim(Newblocks)[1], 1]>=maxsize) {
-          print(Newblocks[dim(Newblocks)[1], ])
+          # message(Newblocks[dim(Newblocks)[1], ])
           break}
         LargeBlocks <- LargeBlocks[-1,, drop=FALSE]
         btwr2<- NULL
       }else{
-        # print(LargeBlocks[1,]) Error in LargeBlocks[1, 1] <- (nowblocks[1] + addN)
+        # message(LargeBlocks[1,]) Error in LargeBlocks[1, 1] <- (nowblocks[1] + addN)
         subbtwr2 <- btwr2[(maxsize*0.4):maxsize]
         addN <- which(subbtwr2 == min(subbtwr2))+ (maxsize*0.4) - 1
         Newblocks <- rbind(Newblocks, c(nowblocks[1], (nowblocks[1]+addN-1)))
@@ -857,14 +813,14 @@ LDblockSplit <- function(geno, LDblocks, maxsize, LD){
         if(diff(LargeBlocks[1,])<maxsize) {
           Newblocks <- rbind(Newblocks, LargeBlocks[1,])
           if(Newblocks[dim(Newblocks)[1], 2]-Newblocks[dim(Newblocks)[1], 1]>=maxsize) {
-            print(Newblocks[dim(Newblocks)[1], ])
+            # message(Newblocks[dim(Newblocks)[1], ])
             break}
           LargeBlocks <- LargeBlocks[-1,, drop=FALSE]
           btwr2<- NULL
         }
       }
       if(Newblocks[dim(Newblocks)[1], 2]-Newblocks[dim(Newblocks)[1], 1]>=maxsize) {
-        print(Newblocks[dim(Newblocks)[1], ])
+        # message(Newblocks[dim(Newblocks)[1], ])
         break}
     } # end while
     FinalLDblocks <- rbind(LDblocks[-LargeBlocksN,], Newblocks)
@@ -945,7 +901,7 @@ LDblockGeneMerge <- function(LDblocks.T, Geneblocks.M) {
     nowGeneR <- LDwithGene.list[i,, drop=FALSE]
     if((LDwithGene.list[i,2] < LDwithGene.list[i+1,1])){
       NonoverlapLDgene <- rbind(NonoverlapLDgene, nowGeneR)
-      # print(i);print(nowGeneR)
+      # message(i);message(nowGeneR)
       i <- i+1
     }else{
       merge.candi <- nowGeneR
@@ -965,7 +921,7 @@ LDblockGeneMerge <- function(LDblocks.T, Geneblocks.M) {
     if(i == dim(LDwithGene.list)[1]){
       nowGeneR <- LDwithGene.list[i,, drop=FALSE]
       NonoverlapLDgene <- rbind(NonoverlapLDgene, nowGeneR)
-      # print(i);print(nowGeneR)
+      # message(i);message(nowGeneR)
       break
     }
   }
@@ -1016,7 +972,7 @@ splitBigLD <- function(GeneLDblocks, LDblocks.T, Geneblocks,maxsize){
       intersectLD <- intersectLD[-seq_len(edposi),,drop=FALSE]
     }
     intersectLD <- NintersectLD
-    # if(all(apply(NintersectLD, 1, diff)<50)==FALSE) print(i)
+    # if(all(apply(NintersectLD, 1, diff)<50)==FALSE) message(i)
     rownames(intersectLD) <- rep(rownames(nowBlock), dim(intersectLD)[1])
     blockL <- apply(intersectLD, 1, diff)+1
     Addblocks <- cbind(intersectLD, blockL)
@@ -1035,7 +991,7 @@ mergeSmallRegion <- function(GeneLDblocks, maxsize, minsize) {
   smallbin <- NULL
   completeBin <- NULL
   while (dim(GeneLDblocks)[1] > 0) {
-    # print(dim(GeneLDblocks))
+    # message(dim(GeneLDblocks))
     nowbin <- GeneLDblocks[1, ,drop=FALSE]
     # if(nowbin[1,1]>75530) break
     if (is.null(smallbin) & nowbin[1,3] >= minsize) {
@@ -1060,8 +1016,8 @@ mergeSmallRegion <- function(GeneLDblocks, maxsize, minsize) {
     } else if (smallbin[1, 3] + nowbin[1,3] > maxsize) {
       lastbin <- completeBin[dim(completeBin)[1], ]
       if(is.null(lastbin)){
-        print(c("Large-small-Large"))
-        print(rbind(lastbin, smallbin, nowbin))
+        message(c("Large-small-Large"))
+        message(rbind(lastbin, smallbin, nowbin))
         completeBin <- rbind(completeBin, smallbin, nowbin)
         smallbin <- NULL
       }else if (lastbin[1,3] + smallbin[1,3] <= maxsize) {
@@ -1072,8 +1028,8 @@ mergeSmallRegion <- function(GeneLDblocks, maxsize, minsize) {
         completeBin <- rbind(completeBin, data.frame(st, ed, blockL))
         smallbin <- NULL
       } else {
-        print(c("Large-small-Large"))
-        print(rbind(lastbin, smallbin, nowbin))
+        message(c("Large-small-Large"))
+        message(rbind(lastbin, smallbin, nowbin))
         completeBin <- rbind(completeBin, smallbin, nowbin)
         smallbin <- NULL
         GeneLDblocks <- GeneLDblocks[-1, ,drop=FALSE]
@@ -1109,7 +1065,7 @@ namingRegion2 <- function(GeneLDblocks, genelist, chrSNPinfo) {
 
   for (i in seq_len(dim(bpBlocks)[1])){
     # if (i%%10 == 0)
-    # print(i)
+    # message(i)
     nowloca <- bpBlocks[i,4:5,drop=FALSE]
     intro.index <- (which(genelist[,4]<nowloca[1,1]))
     intro.index1 <- setdiff(seq_len(dim(genelist)[1]), intro.index)
@@ -1155,7 +1111,7 @@ namingRegion2 <- function(GeneLDblocks, genelist, chrSNPinfo) {
   for (i in 2:dim(FinalGeneLDblocks)[1]) {
     ifelse(FinalGeneLDblocks[i - 1, 6] == FinalGeneLDblocks[i, 6],
            FinalGeneLDblocks[i, 7] <- FinalGeneLDblocks[(i - 1), 7] + 1, FinalGeneLDblocks[i, 7] <- 1)
-    # if(i%%10==0) print(i)
+    # if(i%%10==0) message(i)
   }
 
   Finalnames <- apply(FinalGeneLDblocks, 1, function(x) {
@@ -1169,13 +1125,13 @@ namingRegion2 <- function(GeneLDblocks, genelist, chrSNPinfo) {
 geneinfoExt <- function(geneinfofile=geneinfofile, geneDB = geneDB, assembly = assembly, geneid = geneid,
                          ensbversion = ensbversion, chrNs = chrNs){
   if(!is.null(geneinfofile)){
-    print("load gene information from inputed file")
+    message("load gene information from inputed file")
     geneinfo <- data.table::fread(geneinfofile, stringsAsFactors = FALSE)
     geneinfo <- data.frame(geneinfo)
     colnames(geneinfo) <- c("genename", "chr", "start.bp", "end.bp")
   }else if(geneDB == "ensembl"){
     if(assembly=="GRCh38"){
-      print("load gene information from ensembl (assembly GRCh38)")
+      message("load gene information from ensembl (assembly GRCh38)")
       grch <- 38
       ensembl <- biomaRt::useEnsembl(biomart="ensembl", dataset="hsapiens_gene_ensembl", version=ensbversion)#, version=version
       if(geneid!="ensembl_gene_id"){
@@ -1194,7 +1150,7 @@ geneinfoExt <- function(geneinfofile=geneinfofile, geneDB = geneDB, assembly = a
       # geneinfo <- geneinfo[geneinfo[,1]!="",]
       colnames(geneinfo) <- c("genename", "chr", "start.bp", "end.bp")
     }else if(assembly=="GRCh37"){
-      print("load gene information from ensembl (assembly GRCh37)")
+      message("load gene information from ensembl (assembly GRCh37)")
       ensembl <- biomaRt::useEnsembl(biomart="ensembl", dataset="hsapiens_gene_ensembl", GRCh = 37)#, version=version
 
       if(geneid!="ensembl_gene_id"){
@@ -1217,7 +1173,7 @@ geneinfoExt <- function(geneinfofile=geneinfofile, geneDB = geneDB, assembly = a
     }
   }else if(geneDB == "ucsc"){
     if(assembly == "GRCh37"){
-      print("load gene information from UCSC genome browser (assembly GRCh37)")
+      message("load gene information from UCSC genome browser (assembly GRCh37)")
       Homo.sapiens <- Homo.sapiens::Homo.sapiens
       cls <- AnnotationDbi::columns(Homo.sapiens::Homo.sapiens)
       cls <- cls[match(c("TXCHROM","TXEND","TXSTART"), cls)]
@@ -1236,7 +1192,7 @@ geneinfoExt <- function(geneinfofile=geneinfofile, geneDB = geneDB, assembly = a
       colnames(geneinfo) <- c("genename", "chr", "start.bp", "end.bp")
 
     } else if(assembly == "GRCh38"){
-      print("load gene information from UCSC genome browser (assembly GRCh38)")
+      message("load gene information from UCSC genome browser (assembly GRCh38)")
       Homo.sapiens <- Homo.sapiens::Homo.sapiens
       OrganismDbi::TxDb(Homo.sapiens) <- TxDb.Hsapiens.UCSC.hg38.knownGene::TxDb.Hsapiens.UCSC.hg38.knownGene
       cls <- AnnotationDbi::columns(Homo.sapiens)
@@ -1371,12 +1327,12 @@ CLQD <- function(geno, SNPinfo, CLQcut=0.5, clstgap=40000, hrstType=c("near-nonh
       local_cores <- local_cores[local_cores>=(hrstParam)]
       if(length(local_cores>0)){
         if(heuristicNum==0){
-          print("Use near-CLQ heuristic procedure!!")
+          message("Use near-CLQ heuristic procedure!!")
           heuristicNum <- heuristicNum+1
-          print(paste("hueristic loop", heuristicNum))
+          message(paste("hueristic loop", heuristicNum))
         }else{
           heuristicNum <- heuristicNum+1
-          print(paste("hueristic loop", heuristicNum))
+          message(paste("hueristic loop", heuristicNum))
         }
         # find dense region
         # local_cores <- table(cores[cores>=(hrstParam)])
@@ -1392,9 +1348,9 @@ CLQD <- function(geno, SNPinfo, CLQcut=0.5, clstgap=40000, hrstType=c("near-nonh
         OCM1 <- OCM[is.na(binvector), is.na(binvector)]
       }else{
         # if(heuristicNum ==0){
-        #   # print("We do not need heuristic procedure")
+        #   # message("We do not need heuristic procedure")
         # }else{
-        #   print("End new heuristic procedure")
+        #   message("End new heuristic procedure")
         # }
         heuristic <- FALSE
       }
@@ -1412,9 +1368,9 @@ CLQD <- function(geno, SNPinfo, CLQcut=0.5, clstgap=40000, hrstType=c("near-nonh
       compadjM = OCM1[compov, compov]
       cg = igraph::graph_from_adjacency_matrix(compadjM, mode = "undirected", weighted = TRUE, diag = FALSE, add.colnames = NA)
       if((median(igraph::coreness(cg))>80 & max(igraph::coreness(cg))>100)| (quantile(igraph::coreness(cg), 0.75)>100 & max(igraph::coreness(cg))>100)){
-        print("use fast heuristic procedure!")
+        message("use fast heuristic procedure!")
         # if(quantile(degrees, 0.7) == 1) break
-        # print(head((quantile(degrees, 0.7))))
+        # message(head((quantile(degrees, 0.7))))
         degrees = apply(r2Mat, 1, sum)
         maxdegv = which(degrees >=max(quantile(degrees, 0.7), 80))
         # if(length(maxdegv)>=1){
@@ -1444,7 +1400,7 @@ CLQD <- function(geno, SNPinfo, CLQcut=0.5, clstgap=40000, hrstType=c("near-nonh
         r2Mat <- r2Mat[-Bignbds.c, -Bignbds.c, drop = FALSE]
         OCM1 <- OCM1[-Bignbds.c, -Bignbds.c, drop = FALSE]
         re.SNPbps <- re.SNPbps[-Bignbds.c]
-        # print("case2")
+        # message("case2")
         checkLargest = TRUE
         if(length(re.SNPbps)<500)  checkLargest = FALSE
       }else{
@@ -1477,7 +1433,7 @@ CLQD <- function(geno, SNPinfo, CLQcut=0.5, clstgap=40000, hrstType=c("near-nonh
   # reduce the number of maximal clique? (candidate) or
   # modify density function. narrow SNP distance, so small cliques are chosen preferencely.
   repeat {
-    # print(binnum)
+    # message(binnum)
     if (all(is.na(binvector) == FALSE)) {
       break
     }
@@ -1514,7 +1470,7 @@ CLQD <- function(geno, SNPinfo, CLQcut=0.5, clstgap=40000, hrstType=c("near-nonh
       break
     }
     if(length(split.bp.cliques)==0) break
-    # print(sum(is.na(binvector)))
+    # message(sum(is.na(binvector)))
   }  ##end repeat
 
   if (all(is.na(binvector) == TRUE)) {
@@ -1607,10 +1563,22 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
     if(is.null(geno) |is.null(SNPinfo)){
       stop("Need input data (or files)")
     }
-    geno <- geno
-    SNPinfo <- SNPinfo
+    geno <- as.matrix(geno)
+    # header generation
+    if(is.null(chrN)) chrN <- unique(SNPinfo[,1])
+    colnames(SNPinfo) <- c("chrN", "rsID", "bp")
+    if(startbp != -Inf | endbp != Inf){
+      if((length(chrN)>1) | (length(unique(SNPinfo[,1]))>1))
+        stop("If your input data include more than one chromosome or you choose more than one chromosome,
+             then do not specify the startbp and endbp!")
+      SNPloca <- which(SNPinfo$bp>=startbp & SNPinfo$bp<=endbp & SNPinfo$chrN == chrN)
+      SNPinfo <- SNPinfo[SNPloca,]
+      geno <- geno[,SNPloca]
+    }
+    colnames(geno)<- SNPinfo$rsID
+    chrNs <- unique(SNPinfo[,1])
   }
-  chrNs <- unique(SNPinfo[,1])
+
   totalLDBres <- NULL
   totalCLQres <- rep(NA,dim(SNPinfo)[1])
   stindex <- 0
@@ -1618,16 +1586,16 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
   if(ncol(geno)!=nrow(SNPinfo)) stop("The number of SNPs in geno data and SNPinfo data does not match")
   # for each chrN, seperately apply BigLD algorithm
   for(chrN in chrNs){
-    print(paste("working chromosome name:", chrN))
+    message(paste("working chromosome name:", chrN))
     chrSNPinfo <- SNPinfo[(SNPinfo[,1]==chrN),,drop=FALSE]
     chrgeno <- geno[,(SNPinfo[,1]==chrN),drop=FALSE]
     if(dim(chrSNPinfo)[1]==1)next
     # pruning by MAF ---
-    print(paste("remove SNPs with MAF <", MAFcut))
+    message(paste("remove SNPs with MAF <", MAFcut))
     MAF <- apply(chrgeno, 2, function(x) mean(x,na.rm=TRUE)/2)
     MAF_ok <- ifelse(MAF>=0.5,1-MAF,MAF)
     MAF <- MAF_ok
-    print(paste("Number of SNPs after prunning SNPs with MAF<", MAFcut, ":", sum(MAF>=MAFcut)))
+    message(paste("Number of SNPs after prunning SNPs with MAF<", MAFcut, ":", sum(MAF>=MAFcut)))
     underMAFgeno <- chrgeno[,MAF<MAFcut]
     chrgeno <- chrgeno[,MAF>=MAFcut]
     underMAFSNPinfo <- chrSNPinfo[MAF<MAFcut,]
@@ -1654,7 +1622,7 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
       nowed <- cutblock[i, 2]
       subgeno <- chrgeno[, nowst:nowed]
       subSNPinfo <- chrSNPinfo[nowst:nowed, ]
-      print(paste(Sys.time()," | ", "chr",chrN,":",min(subSNPinfo[,3]), "-" ,max(subSNPinfo[,3]), " | sub-region: ", i,"/",dim(cutblock)[1],  sep = ""))
+      message(paste(Sys.time()," | ", "chr",chrN,":",min(subSNPinfo[,3]), "-" ,max(subSNPinfo[,3]), " | sub-region: ", i,"/",dim(cutblock)[1],  sep = ""))
       subbinvec <- CLQD(geno = subgeno, SNPinfo = subSNPinfo, CLQcut = CLQcut, clstgap = clstgap, hrstType=hrstType,
                         hrstParam = hrstParam, CLQmode = CLQmode, LD = LD)
       # chrCLQres <- c(chrCLQres, subbinvec)
@@ -1681,7 +1649,7 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
     # atfcut -- LD block reconst ----------
     # newLDblocks <- matrix(NA, dim(chrSNPinfo)[1], 2)
     if(length(atfcut)!=0){
-      print("handling the ambiguous sub-task regions..")
+      message("handling the ambiguous sub-task regions..")
       for(i in atfcut){
         cat(paste("ambiguous boundary", i, "\r"))
         if(length(which(largeLDblocks[,1]>i))==0) break
@@ -1729,7 +1697,7 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
     chrLDblocks$end.index<- match(chrLDblocks[,6], chrSNPinfo[,3])
     #append rare variants --------------------
     if(appendRare==TRUE){
-      print( "Append rare variants!")
+      message( "Append rare variants!")
       chrgeno <- geno[,(SNPinfo[,1]==chrN),drop=FALSE]
       chrLDblocks<-appendcutByForce(chrLDblocks, chrgeno, chrSNPinfo, CLQcut=CLQcut, clstgap=clstgap,
                                     CLQmode=CLQmode, hrstType = hrstType, hrstParam=hrstParam, LD=LD)
@@ -1740,7 +1708,7 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
     stindex <- stindex + dim(chrSNPinfo)[1]
     totalLDBres <- rbind(totalLDBres, chrLDblocks)
   } # end for current chr
-  print("BigLD done!")
+  message("BigLD done!")
   return(totalLDBres)
 }
 
@@ -1842,6 +1810,17 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
     if(is.null(geno) |is.null(SNPinfo)){
       stop("Need input data (or files)")
     }
+    if(is.null(chrN)) chrN <- unique(SNPinfo[,1])
+    colnames(SNPinfo) <- c("chrN", "rsID", "bp")
+    if(startbp != -Inf | endbp != Inf){
+      if((length(chrN)>1) | (length(unique(SNPinfo[,1]))>1))
+        stop("If your input data include more than one chromosome or you choose more than one chromosome,
+             then do not specify the startbp and endbp!")
+      SNPloca <- which(SNPinfo$bp>=startbp & SNPinfo$bp<=endbp & SNPinfo$chrN == chrN)
+      SNPinfo <- SNPinfo[SNPloca,]
+      geno <- geno[,SNPloca]
+    }
+    colnames(geno)<- SNPinfo$rsID
   }
   chrNs <- unique(SNPinfo[,1])
 
@@ -1849,16 +1828,16 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
   MAF <- apply(geno, 2, function(x) mean(x,na.rm=TRUE)/2)
   MAF_ok <- ifelse(MAF>=0.5,1-MAF,MAF)
   MAF <- MAF_ok
-  print(paste("Number of SNPs after prunning SNPs with MAF<", MAFcut, ":", sum(MAF>=MAFcut)))
+  message(paste("Number of SNPs after prunning SNPs with MAF<", MAFcut, ":", sum(MAF>=MAFcut)))
   geno <- geno[,MAF>=MAFcut]
   SNPinfo <- SNPinfo[MAF>=MAFcut,]
 
   if(is.null(BigLDresult)){
-    print("Start to execute BigLD function!")
+    message("Start to execute BigLD function!")
     BigLDresult <- BigLD(geno, SNPinfo, CLQcut=CLQcut, CLQmode=CLQmode, LD=LD, MAFcut=MAFcut)#, MAFcut=MAFcut
-    print("Big-LD, done!")
+    message("Big-LD, done!")
   }else{
-    print("Use the inputted BigLD result")
+    message("Use the inputted BigLD result")
     # BigLDblocks <- BigLDresult #[BigLDresult$chr==chrN,]
     newindex.st <- match(BigLDresult$start.rsID, SNPinfo[,2])
     newindex.ed <- match(BigLDresult$end.rsID, SNPinfo[,2])
@@ -1877,11 +1856,11 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
                              ensbversion = ensbversion, chrNs = chrNs)
   }
   if(GPARTmode == "geneBased"){
-    print(paste("GPART algorithm: geneBased"))
+    message(paste("GPART algorithm: geneBased"))
     TotalRes <- NULL
     startindex <- 0
     for(chrN in unique(SNPinfo[,1])){
-      print(paste("working chromosome name:", chrN))
+      message(paste("working chromosome name:", chrN))
       chrSNPinfo <- SNPinfo[(SNPinfo[,1]==chrN),,drop=FALSE]
       chrgeno <- geno[,(SNPinfo[,1]==chrN),drop=FALSE]
       BigLDblocks <- BigLDresult[BigLDresult$chr==chrN,,drop=FALSE]
@@ -1895,7 +1874,7 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
         test <- (which(chrSNPinfo[, 3] >= genelist[i, 3] & chrSNPinfo[, 3] <= genelist[i, 4]))
         ifelse(length(test) > 0, test <- range(test), test <- c(0, 0))
         GeneRegionSNPs1 <- rbind(GeneRegionSNPs1, test)
-        # if(i%%10) print(i)
+        # if(i%%10) message(i)
       }
       rownames(GeneRegionSNPs1) <- genelist[, 1]
       SNPexist <- apply(GeneRegionSNPs1, 1, function(x) (x[1] != 0 & x[2] != 0))
@@ -1957,17 +1936,17 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
       Finalresult$st <- Finalresult$st+startindex
       Finalresult$ed <- Finalresult$ed+startindex
       startindex <- startindex + dim(chrgeno)[2]
-      print(paste("chr", chrN, "done!"))
+      message(paste("chr", chrN, "done!"))
       TotalRes <- rbind(TotalRes, Finalresult)
     }
     # LD block based
   }else if (GPARTmode == "LDblockBased"){
     Blockbasedmode <- match.arg(Blockbasedmode)
-    print(paste("GPART algorithm: LDblockBased-", Blockbasedmode, sep = ""))
+    message(paste("GPART algorithm: LDblockBased-", Blockbasedmode, sep = ""))
     TotalRes <- NULL
     startindex <- 0
     for(chrN in unique(SNPinfo[,1])){
-      print(paste("working chromosome name:", chrN))
+      message(paste("working chromosome name:", chrN))
       chrSNPinfo <- SNPinfo[(SNPinfo[,1]==chrN),,drop=FALSE]
       chrgeno <- geno[,(SNPinfo[,1]==chrN),drop=FALSE]
       BigLDblocks <- BigLDresult[BigLDresult$chr==chrN,,drop=FALSE]
@@ -1982,7 +1961,7 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
         test <- (which(chrSNPinfo[, 3] >= genelist[i, 3] & chrSNPinfo[, 3] <= genelist[i, 4]))
         ifelse(length(test) > 0, test <- range(test), test <- c(0, 0))
         GeneRegionSNPs1 <- rbind(GeneRegionSNPs1, test)
-        # if(i%%10) print(i)
+        # if(i%%10) message(i)
       }
       rownames(GeneRegionSNPs1) <- genelist[, 1]
       SNPexist <- apply(GeneRegionSNPs1, 1, function(x) (x[1] != 0 & x[2] != 0))
@@ -2047,7 +2026,7 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
         addedblocks <- NULL
         generegions <- unique(small.gene[,4])
         for(g in generegions){
-          # print(g)
+          # message(g)
           nowgeneblocks <- small.gene[(small.gene[,4]==g),,drop=FALSE]
           nowbin <- NULL
           while(dim(nowgeneblocks)[1]>0){
@@ -2090,7 +2069,7 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
       Finalresult$st <- Finalresult$st+startindex
       Finalresult$ed <- Finalresult$ed+startindex
       startindex <- startindex + dim(chrgeno)[2]
-      print(paste("chr", chrN, "done!"))
+      message(paste("chr", chrN, "done!"))
       TotalRes <- rbind(TotalRes, Finalresult)
     }
   }
@@ -2212,6 +2191,7 @@ LDblockHeatmap <- function(geno=NULL, SNPinfo=NULL, genofile=NULL, SNPinfofile=N
         stop("Please choose a chromosome!")
       }
     }
+    geno <- as.matrix(geno)
   }
   if(is.null(geneinfo)){
     if(geneshow == TRUE){
@@ -2222,7 +2202,7 @@ LDblockHeatmap <- function(geno=NULL, SNPinfo=NULL, genofile=NULL, SNPinfofile=N
   MAF <- apply(geno, 2, function(x) mean(x,na.rm=TRUE)/2)
   MAF_ok <- ifelse(MAF>=0.5,1-MAF,MAF)
   MAF <- MAF_ok
-  print(paste("Number of SNPs after prunning SNPs with MAF<", MAFcut, ":", sum(MAF>=MAFcut)))
+  message(paste("Number of SNPs after prunning SNPs with MAF<", MAFcut, ":", sum(MAF>=MAFcut)))
   # underMAFgeno <- geno[,MAF<MAFcut]
   geno <- geno[,MAF>=MAFcut]
   # underMAFSNPinfo <- SNPinfo[MAF<MAFcut,]
@@ -2271,13 +2251,13 @@ LDblockHeatmap <- function(geno=NULL, SNPinfo=NULL, genofile=NULL, SNPinfofile=N
   }
   if(NSNPs>maxisize){
     Pmessage <- paste("There are too many SNPs in the chosen region. \n We use the first ",maxisize,"SNPs in the region!")
-    print(Pmessage)
+    message(Pmessage)
     SNPloca <- min(SNPloca):(min(SNPloca)+maxisize-1)
     NSNPs <- length(SNPloca)
   }
   if(NSNPs>200){
     if(CLQshow == TRUE){
-      print("CLQ results can not be displayed because the number of SNPs in the region is too large.")
+      message("CLQ results can not be displayed because the number of SNPs in the region is too large.")
     }
     CLQshow <- FALSE
   }
@@ -2338,7 +2318,7 @@ LDblockHeatmap <- function(geno=NULL, SNPinfo=NULL, genofile=NULL, SNPinfofile=N
     nowgeneinfo <- nowgeneinfo[order(nowgeneinfo[,3]),,drop=FALSE]
     nowgeneinfo <- combineOverlapSamegene(nowgeneinfo)
   }else{
-    print("There is no gene region information!")
+    message("There is no gene region information!")
     nowgeneinfo <- matrix(1,1,1)[-1,,drop=FALSE]
   }
   stratifyGene <- list()
@@ -2737,7 +2717,7 @@ LDblockHeatmap <- function(geno=NULL, SNPinfo=NULL, genofile=NULL, SNPinfofile=N
     geneMap <- gTree(children=geneinfoList,name="Genemap")
     # grid.draw(geneMap)
   }else{
-    if(!is.null(geneinfo)){print("This region does not overlap any gene region!")}
+    if(!is.null(geneinfo)){message("This region does not overlap any gene region!")}
     stratheight <- 0;stratNum <- 0
     geneMap<-NULL
     text_gene <- gList()
@@ -2860,7 +2840,7 @@ LDblockHeatmap <- function(geno=NULL, SNPinfo=NULL, genofile=NULL, SNPinfofile=N
   }
 
   cat("\n")
-  print("Generating file...." )
+  message("Generating file...." )
   if(type == "tif"){
     filename <- paste(filename, ".tif", sep="")
     tiff(filename,res=res, units="cm", height=15, width=15*widthleng)
@@ -2888,7 +2868,7 @@ LDblockHeatmap <- function(geno=NULL, SNPinfo=NULL, genofile=NULL, SNPinfofile=N
     upViewport()
 
     dev.off()
-    print(filename)
+    message(filename)
   }else if(type == "png"){
     filename <- paste(filename, ".png", sep="")
     png(filename,res=res, units="cm", height=15, width=15*widthleng)
@@ -2916,7 +2896,7 @@ LDblockHeatmap <- function(geno=NULL, SNPinfo=NULL, genofile=NULL, SNPinfofile=N
     upViewport()
 
     dev.off()
-    print(filename)
+    message(filename)
   }
 }
 
