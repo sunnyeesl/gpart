@@ -22,7 +22,7 @@ convert2GRange = function(blockresult){
                    "end.rsID", "start.bp", "end.bp")
   GPARTcolname = c("chr", "start.index", "end.index", "start.rsID",
                    "end.rsID", "start.bp", "end.bp", "blocksize", "Name")
-  if(ncol(blockresult) == 7 & all(colnames(blockresult)[1:7] == BigLDcolname)){
+  if(ncol(blockresult) == 7 & all(colnames(blockresult)[seq_len(7)] == BigLDcolname)){
     blocktype <- "bigld"
   }else if(ncol(blockresult) ==9 & all(colnames(blockresult) == GPARTcolname)){
     blocktype <- "gpart"
