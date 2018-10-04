@@ -1628,7 +1628,6 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
       message(paste(Sys.time()," | ", "chr",chrN,":",min(subSNPinfo[,3]), "-" ,max(subSNPinfo[,3]), " | sub-region: ", i,"/",dim(cutblock)[1],  sep = ""))
       subbinvec <- CLQD(geno = subgeno, SNPinfo = subSNPinfo, CLQcut = CLQcut, clstgap = clstgap, hrstType=hrstType,
                         hrstParam = hrstParam, CLQmode = CLQmode, LD = LD)
-
       # chrCLQres <- c(chrCLQres, subbinvec)
       chrCLQres[nowst: nowed]<-subbinvec
       cat('CLQ done!\r')
