@@ -3,15 +3,18 @@ title: "How to use gpart"
 author: "Sunah Kim"
 date: "`r BiocStyle::doc_date()`"
 package: gpart
-output: BiocStyle::html_document
+output: 
+    html_document:
+      toc: true # table of content true
+      toc_depth: 4  # upto four depths of headings (specified by #, ## and ###)
+      number_sections: true  ## if you want number sections at each table header
+      theme: united
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Your Vignette Title}
   %\VignetteEncoding{UTF-8}
 ---
-  ```{r style, echo = FALSE, results = 'asis'}
-  BiocStyle::markdown()
-  ```
+
 
 # Introduction
 

@@ -17,8 +17,8 @@ convert2GRange(blockresult)
 }
 \examples{
 
-testBigLD = BigLD(geno, SNPinfo)
-convert2GRange(testBigLD)
+testBigLD <- BigLD(geno=geno[,1:100], SNPinfo=SNPinfo[1:100,])
+testBigLD_grange <- convert2GRange(testBigLD)
 
 }
 \author{
