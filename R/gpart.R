@@ -1280,6 +1280,10 @@ CLQD <- function(geno, SNPinfo, CLQcut=0.5, clstgap=40000, hrstType=c("near-nonh
   LD <- match.arg(LD)
   hrstType <- match.arg(hrstType)
   geno <- as.matrix(geno)
+  # filtering all NA SNPs
+  allNASNPs = apply(geno, 2, function(x) all(is.na(x)))
+  geno<-geno[, !allNASNPs]
+  SNPinfo<-SNPinfo[!allNASNPs, ]
   # Main Function
   SNPbps <- SNPinfo[, 3]
   if(LD == "r2"){
@@ -1563,6 +1567,10 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
     colnames(geno)<- SNPinfo$rsID
     chrNs <- unique(SNPinfo[,1])
   }
+  # filtering all NA SNPs
+  allNASNPs = apply(geno, 2, function(x) all(is.na(x)))
+  geno<-geno[, !allNASNPs]
+  SNPinfo<-SNPinfo[!allNASNPs, ]
 
   totalLDBres <- NULL
   totalCLQres <- rep(NA,dim(SNPinfo)[1])
@@ -1813,6 +1821,10 @@ GPART <- function(geno=NULL, SNPinfo=NULL, geneinfo=NULL, genofile=NULL, SNPinfo
   }
   chrNs <- unique(SNPinfo[,1])
 
+  # filtering all NA SNPs
+  allNASNPs = apply(geno, 2, function(x) all(is.na(x)))
+  geno<-geno[, !allNASNPs]
+  SNPinfo<-SNPinfo[!allNASNPs, ]
   #SNP filtering
   MAF <- apply(geno, 2, function(x) mean(x,na.rm=TRUE)/2)
   MAF_ok <- ifelse(MAF>=0.5,1-MAF,MAF)
@@ -2192,6 +2204,12 @@ LDblockHeatmap <- function(geno=NULL, SNPinfo=NULL, genofile=NULL, SNPinfofile=N
                                ensbversion = ensbversion, chrNs = chrN)
     }
   }
+
+  # filtering all NA SNPs
+  allNASNPs = apply(geno, 2, function(x) all(is.na(x)))
+  geno<-geno[, !allNASNPs]
+  SNPinfo<-SNPinfo[!allNASNPs, ]
+  ## MAF filtering
   MAF <- apply(geno, 2, function(x) mean(x,na.rm=TRUE)/2)
   MAF_ok <- ifelse(MAF>=0.5,1-MAF,MAF)
   MAF <- MAF_ok
