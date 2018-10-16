@@ -778,7 +778,7 @@ LDblockSplit <- function(geno, LDblocks, maxsize, LD){
       }
       if(length(btwr2)< ceiling(maxsize*0.8*2)){
         subbtwr2 <- btwr2[(ceiling(length(btwr2)/2)-(maxsize*0.2)):(floor(length(btwr2)/2)+(maxsize*0.2))]
-        addN <- which(subbtwr2 == min(subbtwr2))+ (ceiling(length(btwr2)/2)-(maxsize*0.2)) - 1
+        addN <- which(subbtwr2 == min(subbtwr2))[1]+ (ceiling(length(btwr2)/2)-(maxsize*0.2)) - 1
         Newblocks <- rbind(Newblocks, c(nowblocks[1], (nowblocks[1]+addN-1)))
         if(Newblocks[dim(Newblocks)[1], 2]-Newblocks[dim(Newblocks)[1], 1]>=maxsize) {
           # message(Newblocks[dim(Newblocks)[1], ])
@@ -792,7 +792,7 @@ LDblockSplit <- function(geno, LDblocks, maxsize, LD){
       }else{
         # message(LargeBlocks[1,]) Error in LargeBlocks[1, 1] <- (nowblocks[1] + addN)
         subbtwr2 <- btwr2[(maxsize*0.4):maxsize]
-        addN <- which(subbtwr2 == min(subbtwr2))+ (maxsize*0.4) - 1
+        addN <- which(subbtwr2 == min(subbtwr2))[1]+ (maxsize*0.4) - 1
         Newblocks <- rbind(Newblocks, c(nowblocks[1], (nowblocks[1]+addN-1)))
         LargeBlocks[1,1] <- (nowblocks[1]+addN)
         btwr2<-btwr2[-seq_len(addN)]
