@@ -571,6 +571,7 @@ subBigLD <- function(subgeno, subSNPinfo,  CLQcut, clstgap, CLQmode, hrstParam, 
 {
   subbinvec <- CLQD(geno=subgeno, SNPinfo=subSNPinfo, CLQcut=CLQcut, clstgap=clstgap,
                     hrstType=hrstType, hrstParam=hrstParam, CLQmode=CLQmode, LD=LD)
+  if(all(is.na(subbinvec))){return(NULL)}
   bins <- seq_len(max(subbinvec[which(!is.na(subbinvec))]))
   clstlist <- lapply(bins, function(x) which(subbinvec == x))
   clstlist <- lapply(clstlist, sort)  ###
@@ -1533,7 +1534,8 @@ CLQD <- function(geno, SNPinfo, CLQcut=0.5, clstgap=40000, hrstType=c("near-nonh
 
 BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutByForce=NULL,
                    LD=c("r2", "Dprime"), CLQcut=0.5, clstgap=40000, CLQmode=c("density", "maximal"),
-                   leng=200, subTaskSize=1500, MAFcut=0.05, appendRare=FALSE,  hrstType=c("near-nonhrst", "fast", "nonhrst"), hrstParam=200,
+                   leng=200, subTaskSize=1500, MAFcut=0.05, appendRare=FALSE,
+                  hrstType=c("near-nonhrst", "fast", "nonhrst"), hrstParam=200,
                    chrN=NULL, startbp=-Inf, endbp=Inf)
 {
   skipRatio=0.0
@@ -1545,6 +1547,7 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
     inputdata <- dataPreparation(genofile, SNPinfofile, geno, SNPinfo, chrN=chrN, startbp=startbp, endbp=endbp)
     geno <- inputdata[[1]]
     SNPinfo <- inputdata[[2]]
+    chrNs <- unique(SNPinfo[,1])
   }else{
     if(is.null(geno) |is.null(SNPinfo)){
       stop("Need input data (or files)")
