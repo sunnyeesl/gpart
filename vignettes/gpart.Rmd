@@ -40,14 +40,16 @@ In this package **gpart**, we provide a new SNP sequence partitioning method whi
 
 Download and install the most current of "gpart".
 
-```{r library}
+```{r library, eval=FALSE}
 library(gpart)
 ```
-
+```{r library0, include=FALSE}
+library(gpart)
+```
 ## Input data for gpart
 
 To run the `CLQD` and `BigLD` function, you need two kind of input data, additive genotype data in matrix or data.frame (`geno`) and SNP information data(`SNPinfo`).
-Each column of `geno` includes the additive genotypes of individuls for each SNP, and each rwo of `SNPinfo` includes the chromosome name, rsID and bp of each SNP.
+Each column of `geno` includes the additive genotypes of individuls for each SNP, and each rwo of `SNPinfo` includes the chromosome name, rsID and bp of each SNP. The example data contains 286 individuals in EAS population in 1000 Genomes phase 1 data of chr21:16040232-16835352 (4000 SNPs).
 
 
 ```{r data_read, echo=TRUE}

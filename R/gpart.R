@@ -2,40 +2,65 @@
 #'
 
 VCFtogeno <- function(vcf) {
-  .Call('_gpart_VCFtogeno', PACKAGE = 'gpart', vcf)
+  .Call(`_gpart_VCFtogeno`, vcf)
 }
 
 pairCubeX <- function(b1, b2) {
-  .Call('_gpart_pairCubeX', PACKAGE = 'gpart', b1, b2)
+  .Call(`_gpart_pairCubeX`, b1, b2)
 }
 
 matCubeX <- function(geno) {
-  .Call('_gpart_matCubeX', PACKAGE = 'gpart', geno)
+  .Call(`_gpart_matCubeX`, geno)
 }
 
 matCubeX2 <- function(geno1, geno2) {
-  .Call('_gpart_matCubeX2', PACKAGE = 'gpart', geno1, geno2)
+  .Call(`_gpart_matCubeX2`, geno1, geno2)
 }
 
 estiD <- function(pA, pB, n11, n12, n21, n22, n1212) {
-  .Call('_gpart_estiD', PACKAGE = 'gpart', pA, pB, n11, n12, n21, n22, n1212)
+  .Call(`_gpart_estiD`, pA, pB, n11, n12, n21, n22, n1212)
 }
 
 CIDp <- function(b1, b2) {
-  .Call('_gpart_CIDp', PACKAGE = 'gpart', b1, b2)
+  .Call(`_gpart_CIDp`, b1, b2)
 }
 
 genoDp <- function(geno, strLD = TRUE, lower = 0.7, upper = 0.98) {
-  .Call('_gpart_genoDp', PACKAGE = 'gpart', geno, strLD, lower, upper)
-}
-
-genoDp2 <- function(geno1, geno2, strLD = TRUE, lower = 0.7, upper = 0.98) {
-  .Call('_gpart_genoDp2', PACKAGE = 'gpart', geno1, geno2, strLD, lower, upper)
+  .Call(`_gpart_genoDp`, geno, strLD, lower, upper)
 }
 
 genoCubeDp <- function(geno) {
-  .Call('_gpart_genoCubeDp', PACKAGE = 'gpart', geno)
+  .Call(`_gpart_genoCubeDp`, geno)
 }
+
+genoDp2 <- function(geno1, geno2, strLD = TRUE, lower = 0.7, upper = 0.98) {
+  .Call(`_gpart_genoDp2`, geno1, geno2, strLD, lower, upper)
+}
+
+calc_lnlike <- function(known11, known12, known21, known22, center_ct_d, freq11, freq12, freq21, freq22, half_hethet_share, freq11_incr) {
+  .Call(`_gpart_calc_lnlike`, known11, known12, known21, known22, center_ct_d, freq11, freq12, freq21, freq22, half_hethet_share, freq11_incr)
+}
+
+cubic_real_roots <- function(coef_a, coef_b, coef_c, solutions) {
+  .Call(`_gpart_cubic_real_roots`, coef_a, coef_b, coef_c, solutions)
+}
+
+calc_lnlike_quantile <- function(known11, known12, known21, known22, unknown_dh, freqx1, freq1x, freq2x, freq11_expected, denom, quantile) {
+  .Call(`_gpart_calc_lnlike_quantile`, known11, known12, known21, known22, unknown_dh, freqx1, freq1x, freq2x, freq11_expected, denom, quantile)
+}
+
+em_phase_hethet <- function(known11, known12, known21, known22, center_ct, onside_sol_ct_ptr) {
+  .Call(`_gpart_em_phase_hethet`, known11, known12, known21, known22, center_ct, onside_sol_ct_ptr)
+}
+
+haploview_blocks_classify <- function(counts, lowci_max, lowci_min, recomb_highci, strong_highci, strong_lowci, strong_lowci_outer, is_x, recomb_fast_ln_thresh) {
+  .Call(`_gpart_haploview_blocks_classify`, counts, lowci_max, lowci_min, recomb_highci, strong_highci, strong_lowci, strong_lowci_outer, is_x, recomb_fast_ln_thresh)
+}
+
+CIDp_strLD <- function(b1, b2, lower, upper) {
+  .Call(`_gpart_CIDp_strLD`, b1, b2, lower, upper)
+}
+
 
 ################# CLQD subFUNCTIONS ################
 # subfunctions : 1.newSplitCliques 2. heuristicCLQ
@@ -1181,7 +1206,7 @@ geneinfoExt <- function(geneinfofile=geneinfofile, geneDB = geneDB, assembly = a
     } else if(assembly == "GRCh38"){
       message("load gene information from UCSC genome browser (assembly GRCh38)")
       Homo.sapiens <- Homo.sapiens::Homo.sapiens
-      OrganismDbi::TxDb(Homo.sapiens) <- TxDb.Hsapiens.UCSC.hg38.knownGene::TxDb.Hsapiens.UCSC.hg38.knownGene
+      OrganismDbi::TxDb(Homo.sapiens) <- r.hg38.knownGene::TxDb.Hsapiens.UCSC.hg38.knownGene
       cls <- AnnotationDbi::columns(Homo.sapiens)
       cls <- cls[match(c("TXCHROM","TXEND","TXSTART"), cls)]
       kts <- AnnotationDbi::keytypes(Homo.sapiens)
