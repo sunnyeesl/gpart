@@ -94,6 +94,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// genoCubeDp
+NumericMatrix genoCubeDp(IntegerMatrix geno);
+RcppExport SEXP _gpart_genoCubeDp(SEXP genoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerMatrix >::type geno(genoSEXP);
+    rcpp_result_gen = Rcpp::wrap(genoCubeDp(geno));
+    return rcpp_result_gen;
+END_RCPP
+}
 // genoDp2
 NumericMatrix genoDp2(IntegerMatrix geno1, IntegerMatrix geno2, bool strLD, double lower, double upper);
 RcppExport SEXP _gpart_genoDp2(SEXP geno1SEXP, SEXP geno2SEXP, SEXP strLDSEXP, SEXP lowerSEXP, SEXP upperSEXP) {
@@ -109,14 +120,108 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// genoCubeDp
-NumericMatrix genoCubeDp(IntegerMatrix geno);
-RcppExport SEXP _gpart_genoCubeDp(SEXP genoSEXP) {
+// calc_lnlike
+double calc_lnlike(double known11, double known12, double known21, double known22, double center_ct_d, double freq11, double freq12, double freq21, double freq22, double half_hethet_share, double freq11_incr);
+RcppExport SEXP _gpart_calc_lnlike(SEXP known11SEXP, SEXP known12SEXP, SEXP known21SEXP, SEXP known22SEXP, SEXP center_ct_dSEXP, SEXP freq11SEXP, SEXP freq12SEXP, SEXP freq21SEXP, SEXP freq22SEXP, SEXP half_hethet_shareSEXP, SEXP freq11_incrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerMatrix >::type geno(genoSEXP);
-    rcpp_result_gen = Rcpp::wrap(genoCubeDp(geno));
+    Rcpp::traits::input_parameter< double >::type known11(known11SEXP);
+    Rcpp::traits::input_parameter< double >::type known12(known12SEXP);
+    Rcpp::traits::input_parameter< double >::type known21(known21SEXP);
+    Rcpp::traits::input_parameter< double >::type known22(known22SEXP);
+    Rcpp::traits::input_parameter< double >::type center_ct_d(center_ct_dSEXP);
+    Rcpp::traits::input_parameter< double >::type freq11(freq11SEXP);
+    Rcpp::traits::input_parameter< double >::type freq12(freq12SEXP);
+    Rcpp::traits::input_parameter< double >::type freq21(freq21SEXP);
+    Rcpp::traits::input_parameter< double >::type freq22(freq22SEXP);
+    Rcpp::traits::input_parameter< double >::type half_hethet_share(half_hethet_shareSEXP);
+    Rcpp::traits::input_parameter< double >::type freq11_incr(freq11_incrSEXP);
+    rcpp_result_gen = Rcpp::wrap(calc_lnlike(known11, known12, known21, known22, center_ct_d, freq11, freq12, freq21, freq22, half_hethet_share, freq11_incr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cubic_real_roots
+uint32_t cubic_real_roots(double coef_a, double coef_b, double coef_c, NumericVector solutions);
+RcppExport SEXP _gpart_cubic_real_roots(SEXP coef_aSEXP, SEXP coef_bSEXP, SEXP coef_cSEXP, SEXP solutionsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type coef_a(coef_aSEXP);
+    Rcpp::traits::input_parameter< double >::type coef_b(coef_bSEXP);
+    Rcpp::traits::input_parameter< double >::type coef_c(coef_cSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type solutions(solutionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cubic_real_roots(coef_a, coef_b, coef_c, solutions));
+    return rcpp_result_gen;
+END_RCPP
+}
+// calc_lnlike_quantile
+double calc_lnlike_quantile(double known11, double known12, double known21, double known22, double unknown_dh, double freqx1, double freq1x, double freq2x, double freq11_expected, double denom, int32_t quantile);
+RcppExport SEXP _gpart_calc_lnlike_quantile(SEXP known11SEXP, SEXP known12SEXP, SEXP known21SEXP, SEXP known22SEXP, SEXP unknown_dhSEXP, SEXP freqx1SEXP, SEXP freq1xSEXP, SEXP freq2xSEXP, SEXP freq11_expectedSEXP, SEXP denomSEXP, SEXP quantileSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type known11(known11SEXP);
+    Rcpp::traits::input_parameter< double >::type known12(known12SEXP);
+    Rcpp::traits::input_parameter< double >::type known21(known21SEXP);
+    Rcpp::traits::input_parameter< double >::type known22(known22SEXP);
+    Rcpp::traits::input_parameter< double >::type unknown_dh(unknown_dhSEXP);
+    Rcpp::traits::input_parameter< double >::type freqx1(freqx1SEXP);
+    Rcpp::traits::input_parameter< double >::type freq1x(freq1xSEXP);
+    Rcpp::traits::input_parameter< double >::type freq2x(freq2xSEXP);
+    Rcpp::traits::input_parameter< double >::type freq11_expected(freq11_expectedSEXP);
+    Rcpp::traits::input_parameter< double >::type denom(denomSEXP);
+    Rcpp::traits::input_parameter< int32_t >::type quantile(quantileSEXP);
+    rcpp_result_gen = Rcpp::wrap(calc_lnlike_quantile(known11, known12, known21, known22, unknown_dh, freqx1, freq1x, freq2x, freq11_expected, denom, quantile));
+    return rcpp_result_gen;
+END_RCPP
+}
+// em_phase_hethet
+NumericVector em_phase_hethet(double known11, double known12, double known21, double known22, uint32_t center_ct, uint32_t onside_sol_ct_ptr);
+RcppExport SEXP _gpart_em_phase_hethet(SEXP known11SEXP, SEXP known12SEXP, SEXP known21SEXP, SEXP known22SEXP, SEXP center_ctSEXP, SEXP onside_sol_ct_ptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type known11(known11SEXP);
+    Rcpp::traits::input_parameter< double >::type known12(known12SEXP);
+    Rcpp::traits::input_parameter< double >::type known21(known21SEXP);
+    Rcpp::traits::input_parameter< double >::type known22(known22SEXP);
+    Rcpp::traits::input_parameter< uint32_t >::type center_ct(center_ctSEXP);
+    Rcpp::traits::input_parameter< uint32_t >::type onside_sol_ct_ptr(onside_sol_ct_ptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(em_phase_hethet(known11, known12, known21, known22, center_ct, onside_sol_ct_ptr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// haploview_blocks_classify
+uint32_t haploview_blocks_classify(NumericVector counts, uint32_t lowci_max, uint32_t lowci_min, uint32_t recomb_highci, uint32_t strong_highci, uint32_t strong_lowci, uint32_t strong_lowci_outer, uint32_t is_x, double recomb_fast_ln_thresh);
+RcppExport SEXP _gpart_haploview_blocks_classify(SEXP countsSEXP, SEXP lowci_maxSEXP, SEXP lowci_minSEXP, SEXP recomb_highciSEXP, SEXP strong_highciSEXP, SEXP strong_lowciSEXP, SEXP strong_lowci_outerSEXP, SEXP is_xSEXP, SEXP recomb_fast_ln_threshSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type counts(countsSEXP);
+    Rcpp::traits::input_parameter< uint32_t >::type lowci_max(lowci_maxSEXP);
+    Rcpp::traits::input_parameter< uint32_t >::type lowci_min(lowci_minSEXP);
+    Rcpp::traits::input_parameter< uint32_t >::type recomb_highci(recomb_highciSEXP);
+    Rcpp::traits::input_parameter< uint32_t >::type strong_highci(strong_highciSEXP);
+    Rcpp::traits::input_parameter< uint32_t >::type strong_lowci(strong_lowciSEXP);
+    Rcpp::traits::input_parameter< uint32_t >::type strong_lowci_outer(strong_lowci_outerSEXP);
+    Rcpp::traits::input_parameter< uint32_t >::type is_x(is_xSEXP);
+    Rcpp::traits::input_parameter< double >::type recomb_fast_ln_thresh(recomb_fast_ln_threshSEXP);
+    rcpp_result_gen = Rcpp::wrap(haploview_blocks_classify(counts, lowci_max, lowci_min, recomb_highci, strong_highci, strong_lowci, strong_lowci_outer, is_x, recomb_fast_ln_thresh));
+    return rcpp_result_gen;
+END_RCPP
+}
+// CIDp_strLD
+uint32_t CIDp_strLD(IntegerVector b1, IntegerVector b2, double lower, double upper);
+RcppExport SEXP _gpart_CIDp_strLD(SEXP b1SEXP, SEXP b2SEXP, SEXP lowerSEXP, SEXP upperSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type b1(b1SEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type b2(b2SEXP);
+    Rcpp::traits::input_parameter< double >::type lower(lowerSEXP);
+    Rcpp::traits::input_parameter< double >::type upper(upperSEXP);
+    rcpp_result_gen = Rcpp::wrap(CIDp_strLD(b1, b2, lower, upper));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -129,8 +234,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gpart_estiD", (DL_FUNC) &_gpart_estiD, 7},
     {"_gpart_CIDp", (DL_FUNC) &_gpart_CIDp, 2},
     {"_gpart_genoDp", (DL_FUNC) &_gpart_genoDp, 4},
-    {"_gpart_genoDp2", (DL_FUNC) &_gpart_genoDp2, 5},
     {"_gpart_genoCubeDp", (DL_FUNC) &_gpart_genoCubeDp, 1},
+    {"_gpart_genoDp2", (DL_FUNC) &_gpart_genoDp2, 5},
+    {"_gpart_calc_lnlike", (DL_FUNC) &_gpart_calc_lnlike, 11},
+    {"_gpart_cubic_real_roots", (DL_FUNC) &_gpart_cubic_real_roots, 4},
+    {"_gpart_calc_lnlike_quantile", (DL_FUNC) &_gpart_calc_lnlike_quantile, 11},
+    {"_gpart_em_phase_hethet", (DL_FUNC) &_gpart_em_phase_hethet, 6},
+    {"_gpart_haploview_blocks_classify", (DL_FUNC) &_gpart_haploview_blocks_classify, 9},
+    {"_gpart_CIDp_strLD", (DL_FUNC) &_gpart_CIDp_strLD, 4},
     {NULL, NULL, 0}
 };
 

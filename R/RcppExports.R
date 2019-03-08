@@ -29,11 +29,35 @@ genoDp <- function(geno, strLD = TRUE, lower = 0.7, upper = 0.98) {
     .Call(`_gpart_genoDp`, geno, strLD, lower, upper)
 }
 
+genoCubeDp <- function(geno) {
+    .Call(`_gpart_genoCubeDp`, geno)
+}
+
 genoDp2 <- function(geno1, geno2, strLD = TRUE, lower = 0.7, upper = 0.98) {
     .Call(`_gpart_genoDp2`, geno1, geno2, strLD, lower, upper)
 }
 
-genoCubeDp <- function(geno) {
-    .Call(`_gpart_genoCubeDp`, geno)
+calc_lnlike <- function(known11, known12, known21, known22, center_ct_d, freq11, freq12, freq21, freq22, half_hethet_share, freq11_incr) {
+    .Call(`_gpart_calc_lnlike`, known11, known12, known21, known22, center_ct_d, freq11, freq12, freq21, freq22, half_hethet_share, freq11_incr)
+}
+
+cubic_real_roots <- function(coef_a, coef_b, coef_c, solutions) {
+    .Call(`_gpart_cubic_real_roots`, coef_a, coef_b, coef_c, solutions)
+}
+
+calc_lnlike_quantile <- function(known11, known12, known21, known22, unknown_dh, freqx1, freq1x, freq2x, freq11_expected, denom, quantile) {
+    .Call(`_gpart_calc_lnlike_quantile`, known11, known12, known21, known22, unknown_dh, freqx1, freq1x, freq2x, freq11_expected, denom, quantile)
+}
+
+em_phase_hethet <- function(known11, known12, known21, known22, center_ct, onside_sol_ct_ptr) {
+    .Call(`_gpart_em_phase_hethet`, known11, known12, known21, known22, center_ct, onside_sol_ct_ptr)
+}
+
+haploview_blocks_classify <- function(counts, lowci_max, lowci_min, recomb_highci, strong_highci, strong_lowci, strong_lowci_outer, is_x, recomb_fast_ln_thresh) {
+    .Call(`_gpart_haploview_blocks_classify`, counts, lowci_max, lowci_min, recomb_highci, strong_highci, strong_lowci, strong_lowci_outer, is_x, recomb_fast_ln_thresh)
+}
+
+CIDp_strLD <- function(b1, b2, lower, upper) {
+    .Call(`_gpart_CIDp_strLD`, b1, b2, lower, upper)
 }
 
