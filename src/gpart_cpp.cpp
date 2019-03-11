@@ -561,16 +561,13 @@ NumericMatrix genoDp2(IntegerMatrix geno1, IntegerMatrix geno2, bool strLD = tru
         Dpclass = CIDp_strLD(b1, b2,lower = lower, upper=upper);
         if(Dpclass >= 4){
           resMat(i,j) = 1;
-          resMat(j,i) = 1;
         }else{
           resMat(i,j) = 0;
-          resMat(j,i) = 0;
         }
       }else{
         Dpres = CIDp(b1, b2);
         Dp = Dpres[0];
         resMat(i,j) = Dp;
-        resMat(j,i) = Dp;
       }
     }
   }
