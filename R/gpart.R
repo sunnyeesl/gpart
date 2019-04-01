@@ -1671,9 +1671,10 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
     # atfcut -- LD block reconst ----------
     # newLDblocks <- matrix(NA, dim(chrSNPinfo)[1], 2)
     if(length(atfcut)!=0){
+      addingBlocks <- NULL
       message("handling the ambiguous sub-task regions..")
       for(i in atfcut){
-        cat(paste("ambiguous boundary", i, "\r"))
+        print(paste("ambiguous boundary", i, "\r"))
         if(length(which(largeLDblocks[,1]>i))==0) break
         st <- largeLDblocks[max(which(largeLDblocks[,2]<=i)),1]
         ed <- largeLDblocks[min(which(largeLDblocks[,1]>i)),2]
@@ -1698,11 +1699,24 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
         nowLDblocks <- constructLDblock(clstlist, subSNPinfo)
         nowLDblocks <- nowLDblocks + (st - 1)
         nowLDblocks <- nowLDblocks[order(nowLDblocks[, 1]), , drop=FALSE]
-        doneLDblocks <- rbind(doneLDblocks, nowLDblocks)
-        doneLDblocks <- doneLDblocks[order(doneLDblocks[, 1]), , drop=FALSE]
-        largeLDblocks <- doneLDblocks[apply(doneLDblocks, 1, diff)>5,, drop = FALSE]
+        addingBlocks <- rbind(addingBlocks, nowLDblocks)
       }
-      newLDblocks<-doneLDblocks
+      addingBlocks <- rbind(doneLDblocks, addingBlocks)
+      addingBlocks <- addingBlocks[order(addingBlocks[, 2]), , drop=FALSE]
+      addingBlocks <- addingBlocks[order(addingBlocks[, 1]), , drop=FALSE]
+      for(i in 1:(dim(addingBlocks)[1]-1)){
+        if(addingBlocks[i,2]>=addingBlocks[(i+1),2]){
+          addingBlocks[(i+1),]<-c(min(addingBlocks[i:(i+1),]), max(addingBlocks[i:(i+1),]))
+          addingBlocks[i,1] <- NA
+          next
+        }
+        if(addingBlocks[i,2]>=addingBlocks[(i+1),1]){
+          addingBlocks[(i+1),] <-c(min(addingBlocks[i:(i+1),]), max(addingBlocks[i:(i+1),]))
+          addingBlocks[i,1] <- NA
+          next;
+        }
+      }
+      newLDblocks <- addingBlocks[!is.na(addingBlocks[,1]),]
     }else{
       newLDblocks<-doneLDblocks
     } # LDblock reconst ...atfcut
