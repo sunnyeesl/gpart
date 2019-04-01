@@ -19,7 +19,7 @@ vignette: >
 # Introduction
 
 
-In this package **gpart**, we provide a new SNP sequence partitioning method which partitions the whole SNP sequence based on not only LD block structures but also gene location information. The LD block construction for GPART is performed using Big-LD algorithm, with additional improvement from previous version reported in Kim et al.(2017). We also add a visualization tool to show the LD heatmap with the information of LD block boundaries and gene locations in the package.
+In this package **"gpart"**, we provide a new SNP sequence partitioning method which partitions the whole SNP sequence based on not only LD block structures but also gene location information. The LD block construction for GPART is performed using Big-LD algorithm, with additional improvement from previous version reported in Kim et al.(2017). We also add a visualization tool to show the LD heatmap with the information of LD block boundaries and gene locations in the package.
 
 **gpart** including 5 functions as follows.
 
@@ -147,7 +147,8 @@ res3 = BigLD(genofile = "geno.ped", SNPinfofile = "geno.map")
 res4 = BigLD(geno = geno, SNPinfo = SNPinfo, LD = "Dprime", hrstParam = 150)
 ```
 
-The input consists of genotype and SNP information. The function also can directly load the data from the files of PLINK format or VCF (.ped, .map, .traw, .raw, .vcf). As with `CLQD` function, you can choose an LD measure to use (`LD`), r2 threshold (`CLQcut`), heuristic algorithm (`hrstType`, `hrstParam`), CLQ methods (`CLQmode`), threshold for distance of consecutive SNPs in a clique (`clstgap`).
+The input consists of genotype and SNP information. The function also can directly load the data from the files of PLINK format or VCF (.ped, .map, .traw, .raw, .vcf). **If the file sizes (.ped, .traw, .raw, .vcf) are larger than 10Gb, we strongly recommand to use `geno` and `SNPinfo` options after reformatting your data instead of loading large files file directly**.
+As with `CLQD` function, you can choose an LD measure to use (`LD`), r2 threshold (`CLQcut`), heuristic algorithm (`hrstType`, `hrstParam`), CLQ methods (`CLQmode`), threshold for distance of consecutive SNPs in a clique (`clstgap`).
 
 ```{r BigLDeg3, eval=FALSE}
 res5 = BigLD(geno = geno, SNPinfo = SNPinfo, MAFcut = 0.1, appendRare = TRUE)
