@@ -1206,7 +1206,7 @@ geneinfoExt <- function(geneinfofile=geneinfofile, geneDB = geneDB, assembly = a
     } else if(assembly == "GRCh38"){
       message("load gene information from UCSC genome browser (assembly GRCh38)")
       Homo.sapiens <- Homo.sapiens::Homo.sapiens
-      OrganismDbi::TxDb(Homo.sapiens) <- r.hg38.knownGene::TxDb.Hsapiens.UCSC.hg38.knownGene
+      OrganismDbi::TxDb(Homo.sapiens) <- TxDb.Hsapiens.UCSC.hg38.knownGene::TxDb.Hsapiens.UCSC.hg38.knownGene
       cls <- AnnotationDbi::columns(Homo.sapiens)
       cls <- cls[match(c("TXCHROM","TXEND","TXSTART"), cls)]
       kts <- AnnotationDbi::keytypes(Homo.sapiens)
@@ -1288,10 +1288,11 @@ combineOverlapSamegene = function(genelist){
 #'
 #' data(geno)
 #' data(SNPinfo)
-#' CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[100,])
-#' CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[100,], CLQmode = 'maximal')
-#' CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[100,], LD='Dprime')
-#'
+#' CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[1:100,])
+#' \dontrun{
+#' CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[1:100,], CLQmode = 'maximal')
+#' CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[1:100,], LD='Dprime')
+#'}
 #' @author Sun-Ah Kim <sunny03@snu.ac.kr>, Yun Joo Yoo <yyoo@snu.ac.kr>
 #' @importFrom stats cor median quantile
 #' @importFrom utils tail
@@ -1546,7 +1547,7 @@ CLQD <- function(geno, SNPinfo, CLQcut=0.5, clstgap=40000, hrstType=c("near-nonh
 #'
 #' data(geno)
 #' data(SNPinfo)
-#' BigLD(geno[,1:100], SNPinfo[1:100,])
+#' BigLD(geno=geno, SNPinfo=SNPinfo, startbp = 16058400, endbp = 16076500)
 #'
 #' \dontrun{
 #' BigLD(geno, SNPinfo, LD = "Dprime")
@@ -1811,7 +1812,7 @@ BigLD <- function(geno=NULL, SNPinfo=NULL,genofile=NULL, SNPinfofile=NULL, cutBy
 #' data(geno)
 #' data(SNPinfo)
 #' data(geneinfo)
-#' GPART(geno=geno[,1:100], SNPinfo=SNPinfo[1:100,], geneinfo=geneinfo)
+#' GPART(geno=geno, SNPinfo=SNPinfo, geneinfo=geneinfo, startbp = 16058400, endbp = 16076500)
 #'
 #' @importFrom stats cor median quantile
 #' @importFrom utils tail

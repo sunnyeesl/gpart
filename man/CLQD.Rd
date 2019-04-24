@@ -45,10 +45,11 @@ A vector of cluster numbers of all  SNPs (\code{NA} represents singleton cluster
 
 data(geno)
 data(SNPinfo)
-CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[100,])
-CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[100,], CLQmode = 'maximal')
-CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[100,], LD='Dprime')
-
+CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[1:100,])
+\dontrun{
+CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[1:100,], CLQmode = 'maximal')
+CLQD(geno=geno[,1:100],SNPinfo=SNPinfo[1:100,], LD='Dprime')
+}
 }
 \seealso{
 \code{\link{BigLD}}

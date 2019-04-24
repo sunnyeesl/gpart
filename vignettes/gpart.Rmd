@@ -55,6 +55,7 @@ Each column of `geno` includes the additive genotypes of individuls for each SNP
 ```{r data_read, echo=TRUE}
 data(geno)
 data(SNPinfo)
+data(geneinfo)
 ```
 
 ```{r datatype_geno, echo=TRUE}
@@ -62,6 +63,36 @@ geno[1:5, 1:5]
 ```
 ```{r datatype_SNPinfo, echo=TRUE}
 head(SNPinfo)
+```
+```{r datatype_geneinfo, echo=TRUE}
+head(geneinfo)
+```
+
+## Quick Start
+
+To construct LD blocks, use `BigLD` function. 
+```{r quickstart_bigld, echo=FALSE}
+# By default, BigLD uses LD measure r2.
+BigLDres = BigLD(geno = geno, SNPinfo = SNPinfo)
+```
+To partition SNPs into blocks considering the LD block structure and gene regions, use `GPART` function. You can speicify the min and max size of blocks. 
+```{r quickstart_gpart, echo=FALSE}
+# load the gene information from the DB (via biomaRt)
+GPARTres = GPART(geno = geno, SNPinfo = SNPinfo,
+                 assembly = "GRCh37", minsize = 4, maxsize = 50)
+# use inputted gene information
+GPARTres = GPART(geno = geno, SNPinfo = SNPinfo, geneinfo = geneinfo, 
+                 minsize = 4, maxsize = 50)
+```
+
+To visualize the `BigLD` or `GPART` results, use the `LDblockHeatmap` function.
+```{r quickstart_ldblockheatmap, echo=FALSE}
+# load the gene information from the DB (via biomaRt)
+LDblockHeatmap(geno = geno, SNPinfo = SNPinfo, assembly = "GRCh37", 
+                filename = "heatmap_example2", res = 150)
+# use inputted gene information
+LDblockHeatmap(geno = geno, SNPinfo = SNPinfo, geneinfo = geneinfo, 
+                filename = "heatmap_example1", res = 150)
 ```
 
 ## Functions
@@ -72,7 +103,7 @@ CLQD is an algorithm for clustering the SNPs into LD bins which are high-correla
 
 #### Examples
 ```{r CLQDeg1}
-clq1 = CLQD(geno[, 1:300], SNPinfo[1:300,])
+clq1 = CLQD(geno[, 1:100], SNPinfo[1:100,])
 
 ```
 
@@ -92,13 +123,13 @@ sum(is.na(clq1))
 #### Details
 
 ```{r CLQDeg2, eval=FALSE}
-CLQD(geno[, 1:500], SNPinfo[1:500,], LD = "Dprime")
+CLQD(geno[, 1:100], SNPinfo[1:100,], LD = "Dprime")
 ```
 
 The algorithm first constructs a graph in which the vertices are SNPs and each edge is an unordered pair of two SNPs. Each edge weight is given by LD value between two SNPs. CLQD uses $r^2$ or D' as the LD measurement. If you want to measure $r^2$, set `LD = "r2"`(default), otherwise set `LD = "Dprime"`. When `LD = "r2"`, we have to specify a threshold for $|r|$ by using the parameter `CLQcut`. The default is `CLQcut = 0.5`. For the D', we define valid edges following definition of 'strong LD' suggested by Gabriel et al., (2002).
 
 ```{r CLQDeg3, eval=FALSE}
-CLQD(geno[, 1:500], SNPinfo[1:500,], CLQcut = 0.7, hrstType = "fast", 
+CLQD(geno[, 1:100], SNPinfo[1:100,], CLQcut = 0.7, hrstType = "fast", 
      CLQmode = "maximal")
 
 ```
