@@ -498,7 +498,7 @@ NumericMatrix genoDp(IntegerMatrix geno, bool strLD = true, double lower = 0.7, 
         b1 = geno(_,i);
         b2 = geno(_,j);
         if(strLD == true){
-          Dpclass = CIDp_strLD(b1, b2,lower = lower, upper=upper);
+          Dpclass = CIDp_strLD(b1, b2,lower, upper);
           if(Dpclass >= 4){
             resMat(i,j) = 1;
             resMat(j,i) = 1;
@@ -558,7 +558,7 @@ NumericMatrix genoDp2(IntegerMatrix geno1, IntegerMatrix geno2, bool strLD = tru
       b1 = geno1(_,i);
       b2 = geno2(_,j);
       if(strLD == true){
-        Dpclass = CIDp_strLD(b1, b2,lower = lower, upper=upper);
+        Dpclass = CIDp_strLD(b1, b2,lower,upper);
         if(Dpclass >= 4){
           resMat(i,j) = 1;
         }else{
