@@ -619,8 +619,8 @@ uint32_t cubic_real_roots(double coef_a, double coef_b, double coef_c, NumericVe
     dxx = acos(rr / (qq * sq)) * (1.0 / 3.0);
     sq *= -2;
     solutions[0] = sq * cos(dxx) - adiv3;
-    solutions[1] = sq * cos(dxx + (2.0 * PI / 3.0)) - adiv3;
-    solutions[2] = sq * cos(dxx - (2.0 * PI / 3.0)) - adiv3;
+    solutions[1] = sq * cos(dxx + (2.0 * M_PI / 3.0)) - adiv3;
+    solutions[2] = sq * cos(dxx - (2.0 * M_PI / 3.0)) - adiv3;
     // now sort and check for within-epsilon equality
     if (solutions[0] > solutions[1]) {
       dxx = solutions[0];
